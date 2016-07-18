@@ -4,7 +4,7 @@ dist: trusty
 
 before_install:
   - sudo apt-get update -qq
-  - sudo apt-get install -qq libsdl2-dev
+  - sudo apt-get install -qq libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev libsdl2-mixer-dev
 
 compiler:
   - gcc
