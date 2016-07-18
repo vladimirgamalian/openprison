@@ -70,7 +70,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>C:\Libraries\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Libraries\lib;C:\Libraries\lib\SDL2\VS2015\Win32\Debug;C:\Libraries\lib\SDL2pp\Debug;$(LibraryPath)</LibraryPath>
+    <LibraryPath>C:\Libraries;C:\Libraries\lib;C:\Libraries\lib\SDL2\VS2015\Win32\Debug;C:\Libraries\lib\SDL2pp\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='UnitTest|Win32'">
     <LinkIncremental>true</LinkIncremental>
@@ -80,7 +80,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>C:\Libraries\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Libraries\lib;C:\Libraries\lib\SDL2\VS2015\Win32\Release;C:\Libraries\lib\SDL2pp\Release;$(LibraryPath)</LibraryPath>
+    <LibraryPath>C:\Libraries;C:\Libraries\lib;C:\Libraries\lib\SDL2\VS2015\Win32\Release;C:\Libraries\lib\SDL2pp\Release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
