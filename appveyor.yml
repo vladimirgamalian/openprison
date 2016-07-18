@@ -6,6 +6,12 @@ configuration:
 
 platform:
   - Win32
+  
+before_build:
+  - appveyor DownloadFile https://github.com/vladimirgamalian/sdl2_msvc_builds/releases/download/SDL2-Binaries/sdl2.zip
+  - 7z x sdl2.zip -oC:\Libraries > nul
+  - appveyor DownloadFile https://github.com/vladimirgamalian/sdl2pp_msvc2015/releases/download/libSDL2pp-Binaries/sdl2pp.zip
+  - 7z x sdl2.zip -oC:\Libraries > nul  
 
 build:
   project: openprison.sln
