@@ -16,6 +16,7 @@ int main(int argc, char *args[])
 			SDL_WINDOW_RESIZABLE);
 
 		SDL2pp::Renderer renderer(window, -1, SDL_RENDERER_ACCELERATED);
+		float worldScale = 1.f;
 
 		World world(renderer);
 
@@ -24,18 +25,33 @@ int main(int argc, char *args[])
 			SDL_Event event;
 			while (SDL_PollEvent(&event)) 
 			{
-				if (event.type == SDL_QUIT)
+				switch (event.type)
 				{
+				case SDL_QUIT:
 					return EXIT_SUCCESS;
-				}
-				else if (event.type == SDL_KEYDOWN) 
-				{
-					switch (event.key.keysym.sym) 
+				case SDL_KEYDOWN:
+					switch (event.key.keysym.sym)
 					{
 					case SDLK_ESCAPE:
 						return EXIT_SUCCESS;
 					}
+					break;
+				case SDL_MOUSEWHEEL:
+					{
+						int y = event.wheel.y;
+						if (y > 0)
+						{
+							worldScale += 0.1f;
+						}
+						if (y < 0)
+						{
+							worldScale -= 0.1f;
+						}
+						renderer.SetScale(worldScale, worldScale);
+					}
+					break;
 				}
+				
 			}
 
 			renderer.Clear();
