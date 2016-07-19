@@ -2,6 +2,7 @@
 #include <exception>
 #include <SDL2/SDL.h>
 #include <SDL2pp/SDL2pp.hh>
+#include "World.h"
 
 int main(int argc, char *args[])
 {
@@ -15,7 +16,8 @@ int main(int argc, char *args[])
 			SDL_WINDOW_RESIZABLE);
 
 		SDL2pp::Renderer renderer(window, -1, SDL_RENDERER_ACCELERATED);
-		SDL2pp::Texture sprites(renderer, "M484SpaceSoldier.png");
+
+		World world(renderer);
 
 		for (;;)
 		{
@@ -37,7 +39,7 @@ int main(int argc, char *args[])
 			}
 
 			renderer.Clear();
-			renderer.Copy(sprites);
+			world.draw();
 			renderer.Present();
 			SDL_Delay(1);
 		}
