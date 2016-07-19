@@ -18,7 +18,8 @@ private:
 	SDL2pp::Renderer& renderer;
 	SDL2pp::Texture dirt;
 	SDL2pp::Texture tux;
-	SDL2pp::Texture wall;
+	std::unique_ptr<SDL2pp::Texture> walls[16];
 
 	uint32_t cells[ROW_COUNT][COL_COUNT];
+	uint32_t cellsAttr[ROW_COUNT][COL_COUNT];
 };
