@@ -53,7 +53,30 @@ void World::setWall(int col, int row)
 	if ((row < 0) || (row >= ROW_COUNT))
 		return;
 	cells[row][col] = 1;
-	cellsAttr[row][col] = 0;
+
+	uint32_t attr = 0;
+	if (getCellUp(col, row) == 1)
+	{
+		attr |= 1;
+		cellsAttr[row - 1][col] |= 4;
+	}
+	if (getCellRight(col, row) == 1)
+	{
+		attr |= 2;
+		cellsAttr[row][col + 1] |= 8;
+	}
+	if (getCellDown(col, row) == 1)
+	{
+		attr |= 4;
+		cellsAttr[row + 1][col] |= 1;
+	}
+	if (getCellLeft(col, row) == 1)
+	{
+		attr |= 8;
+		cellsAttr[row][col - 1] |= 2;
+	}
+
+	cellsAttr[row][col] = attr;
 }
 
 SDL2pp::Point World::screenToWorld(int x, int y, float scale, float shiftX, float shiftY) const
@@ -67,4 +90,31 @@ SDL2pp::Point World::screenToWorld(int x, int y, float scale, float shiftX, floa
 	resultX /= 64;
 	resultY /= 64;
 	return SDL2pp::Point(static_cast<int>(resultX), static_cast<int>(resultY));
+}
+
+uint32_t World::getCell(int col, int row) const
+{
+	if ((col < 0) || (col >= COL_COUNT) || (row < 0) || (row >= ROW_COUNT))
+		return 0;
+	return cells[row][col];
+}
+
+uint32_t World::getCellUp(int col, int row) const
+{
+	return getCell(col, row - 1);
+}
+
+uint32_t World::getCellRight(int col, int row) const
+{
+	return getCell(col + 1, row);
+}
+
+uint32_t World::getCellDown(int col, int row) const
+{
+	return getCell(col, row + 1);
+}
+
+uint32_t World::getCellLeft(int col, int row) const
+{
+	return getCell(col - 1, row);
 }

@@ -70,9 +70,9 @@ int main(int argc, char *args[])
 					{
 						int x = event.button.x;
 						int y = event.button.y;
-						std::cout << "SDL_MOUSEBUTTONDOWN " << x << ":" << y << std::endl;
+						//std::cout << "SDL_MOUSEBUTTONDOWN " << x << ":" << y << std::endl;
 						SDL2pp::Point cellPos = world->screenToWorld(x, y, worldScale, shiftX, shiftY);
-						std::cout << "WORLD POS " << cellPos << std::endl;
+						//std::cout << "WORLD POS " << cellPos << std::endl;
 						world->setWall(cellPos.x, cellPos.y);
 					}
 					break;

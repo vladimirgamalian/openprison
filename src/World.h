@@ -15,6 +15,13 @@ public:
 	SDL2pp::Point screenToWorld(int x, int y, float scale, float shiftX, float shiftY) const;
 
 private:
+
+	uint32_t getCell(int col, int row) const;
+	uint32_t getCellUp(int col, int row) const;
+	uint32_t getCellRight(int col, int row) const;
+	uint32_t getCellDown(int col, int row) const;
+	uint32_t getCellLeft(int col, int row) const;
+
 	SDL2pp::Renderer& renderer;
 	SDL2pp::Texture dirt;
 	SDL2pp::Texture tux;
