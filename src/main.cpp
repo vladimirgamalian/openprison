@@ -47,7 +47,6 @@ int main(int argc, char *args[])
 						{
 							worldScale -= 0.1f;
 						}
-						renderer.SetScale(worldScale, worldScale);
 					}
 					break;
 				}
@@ -55,7 +54,7 @@ int main(int argc, char *args[])
 			}
 
 			renderer.Clear();
-			world.draw();
+			world.draw(worldScale);
 			renderer.Present();
 			SDL_Delay(1);
 		}

@@ -8,9 +8,10 @@ public:
 	static const size_t ROW_COUNT = 256;
 
 	World(SDL2pp::Renderer& renderer);
-	void draw();
+	void draw(float scale);
 
 private:
 	SDL2pp::Renderer& renderer;
 	SDL2pp::Texture dirt;
+	SDL2pp::Texture tux;
 };
