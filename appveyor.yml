@@ -8,7 +8,7 @@ platform:
   - Win32
   
 before_build:
-  - appveyor DownloadFile https://github.com/vladimirgamalian/sdl2_msvc_builds/releases/download/SDL2-bin/sdl2.zip
+  - appveyor DownloadFile https://github.com/vladimirgamalian/sdl2_msvc_builds/releases/download/SDL2-Binaries/sdl2.zip
   - 7z x sdl2.zip -oC:\Libraries > nul
   - appveyor DownloadFile https://github.com/vladimirgamalian/sdl2pp_msvc2015/releases/download/libSDL2pp-bin/sdl2pp.zip
   - 7z x sdl2pp.zip -oC:\Libraries > nul  
