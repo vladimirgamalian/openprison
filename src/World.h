@@ -8,10 +8,17 @@ public:
 	static const size_t ROW_COUNT = 256;
 
 	World(SDL2pp::Renderer& renderer);
-	void draw(float scale);
+	void draw(float scale, float shiftX, float shiftY);
+
+	void setWall(int col, int row);
+
+	SDL2pp::Point screenToWorld(int x, int y, float scale, float shiftX, float shiftY) const;
 
 private:
 	SDL2pp::Renderer& renderer;
 	SDL2pp::Texture dirt;
 	SDL2pp::Texture tux;
+	SDL2pp::Texture wall;
+
+	uint32_t cells[ROW_COUNT][COL_COUNT];
 };

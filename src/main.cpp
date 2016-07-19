@@ -16,9 +16,12 @@ int main(int argc, char *args[])
 			SDL_WINDOW_RESIZABLE);
 
 		SDL2pp::Renderer renderer(window, -1, SDL_RENDERER_ACCELERATED);
-		float worldScale = 1.f;
+		float worldScale = 0.5f;
+		float shiftX = 0;
+		float shiftY = 0;
+		const float shiftSpeed = 4.f;
 
-		World world(renderer);
+		std::unique_ptr<World> world(new World(renderer));
 
 		for (;;)
 		{
@@ -34,19 +37,43 @@ int main(int argc, char *args[])
 					{
 					case SDLK_ESCAPE:
 						return EXIT_SUCCESS;
+					case SDLK_UP:
+						shiftY += shiftSpeed * worldScale;
+						break;
+					case SDLK_DOWN:
+						shiftY -= shiftSpeed * worldScale;
+						break;
+					case SDLK_LEFT:
+						shiftX += shiftSpeed * worldScale;
+						break;
+					case SDLK_RIGHT:
+						shiftX -= shiftSpeed * worldScale;
+						break;
+					case SDLK_PAGEDOWN:
+						worldScale += 0.1f;
+						break;
+					case SDLK_PAGEUP:
+						worldScale -= 0.1f;
+						break;
 					}
 					break;
 				case SDL_MOUSEWHEEL:
 					{
 						int y = event.wheel.y;
 						if (y > 0)
-						{
 							worldScale += 0.1f;
-						}
 						if (y < 0)
-						{
 							worldScale -= 0.1f;
-						}
+					}
+					break;
+				case SDL_MOUSEBUTTONDOWN:
+					{
+						int x = event.button.x;
+						int y = event.button.y;
+						std::cout << "SDL_MOUSEBUTTONDOWN " << x << ":" << y << std::endl;
+						SDL2pp::Point cellPos = world->screenToWorld(x, y, worldScale, shiftX, shiftY);
+						std::cout << "WORLD POS " << cellPos << std::endl;
+						world->setWall(cellPos.x, cellPos.y);
 					}
 					break;
 				}
@@ -54,7 +81,7 @@ int main(int argc, char *args[])
 			}
 
 			renderer.Clear();
-			world.draw(worldScale);
+			world->draw(worldScale, shiftX, shiftY);
 			renderer.Present();
 			SDL_Delay(1);
 		}
