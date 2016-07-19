@@ -73,7 +73,10 @@ int main(int argc, char *args[])
 						//std::cout << "SDL_MOUSEBUTTONDOWN " << x << ":" << y << std::endl;
 						SDL2pp::Point cellPos = world->screenToWorld(x, y, worldScale, shiftX, shiftY);
 						//std::cout << "WORLD POS " << cellPos << std::endl;
-						world->setWall(cellPos.x, cellPos.y);
+						if (event.button.button == SDL_BUTTON_LEFT)
+							world->setWall(cellPos.x, cellPos.y);
+						if (event.button.button == SDL_BUTTON_RIGHT)
+							world->removeWall(cellPos.x, cellPos.y);
 					}
 					break;
 				}

@@ -79,6 +79,20 @@ void World::setWall(int col, int row)
 	cellsAttr[row][col] = attr;
 }
 
+void World::removeWall(int col, int row)
+{
+	cells[row][col] = 0;
+
+	if (getCellUp(col, row) == 1)
+		cellsAttr[row - 1][col] &= ~4;
+	if (getCellRight(col, row) == 1)
+		cellsAttr[row][col + 1] &= ~8;
+	if (getCellDown(col, row) == 1)
+		cellsAttr[row + 1][col] &= ~1;
+	if (getCellLeft(col, row) == 1)
+		cellsAttr[row][col - 1] &= ~2;
+}
+
 SDL2pp::Point World::screenToWorld(int x, int y, float scale, float shiftX, float shiftY) const
 {
 	float resultX = static_cast<float>(x);

@@ -11,6 +11,7 @@ public:
 	void draw(float scale, float shiftX, float shiftY);
 
 	void setWall(int col, int row);
+	void removeWall(int col, int row);
 
 	SDL2pp::Point screenToWorld(int x, int y, float scale, float shiftX, float shiftY) const;
 
