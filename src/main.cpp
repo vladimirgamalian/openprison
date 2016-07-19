@@ -3,42 +3,50 @@
 #include <SDL2/SDL.h>
 #include <SDL2pp/SDL2pp.hh>
 
-using namespace SDL2pp;
+int main(int argc, char *args[])
+{
+	try {
 
-int main(int argc, char *args[]) try {
+		SDL2pp::SDL sdl(SDL_INIT_VIDEO);
 
-	// Initialize SDL library
-	SDL sdl(SDL_INIT_VIDEO);
+		SDL2pp::Window window("Open Prison",
+			SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+			640, 480,
+			SDL_WINDOW_RESIZABLE);
 
-	// Create main window: 640x480 dimensions, resizable, "SDL2pp demo" title
-	Window window("SDL2pp demo",
-		SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-		640, 480,
-		SDL_WINDOW_RESIZABLE);
+		SDL2pp::Renderer renderer(window, -1, SDL_RENDERER_ACCELERATED);
+		SDL2pp::Texture sprites(renderer, "M484SpaceSoldier.png");
 
-	// Create accelerated video renderer with default driver
-	Renderer renderer(window, -1, SDL_RENDERER_ACCELERATED);
+		for (;;)
+		{
+			SDL_Event event;
+			while (SDL_PollEvent(&event)) 
+			{
+				if (event.type == SDL_QUIT)
+				{
+					return EXIT_SUCCESS;
+				}
+				else if (event.type == SDL_KEYDOWN) 
+				{
+					switch (event.key.keysym.sym) 
+					{
+					case SDLK_ESCAPE:
+						return EXIT_SUCCESS;
+					}
+				}
+			}
 
-	// Load sprites image as a new texture
-	Texture sprites(renderer, "M484SpaceSoldier.png");
+			renderer.Clear();
+			renderer.Copy(sprites);
+			renderer.Present();
+			SDL_Delay(1);
+		}
 
-	// Clear screen
-	renderer.Clear();
-
-	// Render our image, stretching it to the whole window
-	renderer.Copy(sprites);
-
-	// Show rendered frame
-	renderer.Present();
-
-	// 5 second delay
-	SDL_Delay(3000);
-
-	// Here all resources are automatically released and library deinitialized
-	return 0;
-}
-catch (std::exception& e) {
-	// If case of error, print it and exit with error
-	std::cerr << e.what() << std::endl;
-	return 1;
+		return EXIT_SUCCESS;
+	}
+	catch (std::exception& e)
+	{
+		std::cerr << e.what() << std::endl;
+		return EXIT_FAILURE;
+	}
 }
