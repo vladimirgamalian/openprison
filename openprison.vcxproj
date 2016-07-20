@@ -22,11 +22,13 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="src\Worker.cpp" />
     <ClCompile Include="src\World.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\unitTests\catch.hpp" />
     <ClInclude Include="src\Utils.h" />
+    <ClInclude Include="src\Worker.h" />
     <ClInclude Include="src\World.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

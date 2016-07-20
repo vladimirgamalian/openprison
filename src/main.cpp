@@ -83,6 +83,8 @@ int main(int argc, char *args[])
 				
 			}
 
+			world->update();
+
 			renderer.Clear();
 			world->draw(worldScale, shiftX, shiftY);
 			renderer.Present();

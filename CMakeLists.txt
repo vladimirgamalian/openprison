@@ -10,6 +10,7 @@ include_directories(SYSTEM ${SDL2PP_INCLUDE_DIRS})
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 set(SOURCE_FILES
+	./src/Worker.cpp
 	./src/World.cpp
 	./src/main.cpp)
 
