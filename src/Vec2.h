@@ -73,7 +73,7 @@ public:
         return (x == 0) && (y == 0);
     }
 
-    double distance(const Vec2& other) const;
+	double distance(const Vec2& other) const;
 
 	void reset()
 	{

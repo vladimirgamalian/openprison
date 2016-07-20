@@ -9,7 +9,9 @@ public:
 	Worker(SDL2pp::Renderer& renderer);
 	void draw();
 	void update();
-	void setDebugPath();
+	void clearPath();
+	void addPath(const Vec2& pos);
+	Vec2 getCellPos() const;
 
 private:
 	std::unique_ptr<SDL2pp::Texture> textures[4];

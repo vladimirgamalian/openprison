@@ -4,7 +4,9 @@
 World::World(SDL2pp::Renderer& renderer) : 
 	renderer(renderer),
 	worker(renderer),
+	microPather(this),
 	dirt(renderer, "data/tileset/ground/dirt.png"),
+	border(renderer, "data/tileset/border.png"),
 	tux(renderer, "data/tux.png")
 {
 	for (int i = 0; i < 16; ++i)
@@ -13,9 +15,21 @@ World::World(SDL2pp::Renderer& renderer) :
 		walls[i] = std::unique_ptr<SDL2pp::Texture>(new SDL2pp::Texture(renderer, fileName));
 	}
 
-	memset(cells, 0, ROW_COUNT * COL_COUNT);
+	memset(cells, static_cast<int>(Tiles::Space), ROW_COUNT * COL_COUNT);
 	memset(cellsAttr, 0, ROW_COUNT * COL_COUNT);
-	cells[0][0] = 1;
+	cells[2][2] = static_cast<int>(Tiles::Wall);
+
+	for (size_t col = 0; col < COL_COUNT; ++col)
+	{
+		cells[0][col] = static_cast<int>(Tiles::Border);
+		cells[ROW_COUNT - 1][col] = static_cast<int>(Tiles::Border);
+	}
+
+	for (size_t row = 0; row < ROW_COUNT; ++row)
+	{
+		cells[row][0] = static_cast<int>(Tiles::Border);
+		cells[row][COL_COUNT - 1] = static_cast<int>(Tiles::Border);
+	}
 }
 
 void World::draw(float scale, float shiftX, float shiftY)
@@ -33,13 +47,23 @@ void World::draw(float scale, float shiftX, float shiftY)
 
 			uint32_t cell = cells[row][col];
 			uint32_t attr = cellsAttr[row][col];
-			if (cell)
+
+			switch (cell)
 			{
-				SDL2pp::Texture* texture = walls[attr % 16].get();
-				renderer.Copy(*texture, SDL2pp::NullOpt, SDL2pp::Rect(x, y, w, h));
-			}
-			else
+			case Tiles::Wall:
+				{
+					SDL2pp::Texture* texture = walls[attr % 16].get();
+					renderer.Copy(*texture, SDL2pp::NullOpt, SDL2pp::Rect(x, y, w, h));
+				}
+				break;
+			case Tiles::Border:
+				renderer.Copy(border, SDL2pp::NullOpt, SDL2pp::Rect(x, y, w, h));
+				break;
+			case Tiles::Space:
 				renderer.Copy(dirt, SDL2pp::NullOpt, SDL2pp::Rect(x, y, w, h));
+				break;
+			}
+
 		}
 	}
 
@@ -54,51 +78,72 @@ void World::update()
 	worker.update();
 }
 
-void World::setWall(int col, int row)
+void World::setWall(const Vec2& pos)
 {
-	if ((col < 0) || (col >= COL_COUNT))
+	if (!isValidPos(pos))
 		return;
-	if ((row < 0) || (row >= ROW_COUNT))
-		return;
-	cells[row][col] = 1;
+
+	cells[pos.y][pos.x] = static_cast<int>(Tiles::Wall);
 
 	uint32_t attr = 0;
-	if (getCellUp(col, row) == 1)
+	if (cells[pos.y - 1][pos.x] == Tiles::Wall)		// up
 	{
 		attr |= 1;
-		cellsAttr[row - 1][col] |= 4;
+		cellsAttr[pos.y - 1][pos.x] |= 4;
 	}
-	if (getCellRight(col, row) == 1)
+	if (cells[pos.y][pos.x + 1] == Tiles::Wall)		// right
 	{
 		attr |= 2;
-		cellsAttr[row][col + 1] |= 8;
+		cellsAttr[pos.y][pos.x + 1] |= 8;
 	}
-	if (getCellDown(col, row) == 1)
+	if (cells[pos.y + 1][pos.x] == Tiles::Wall)		// down
 	{
 		attr |= 4;
-		cellsAttr[row + 1][col] |= 1;
+		cellsAttr[pos.y + 1][pos.x] |= 1;
 	}
-	if (getCellLeft(col, row) == 1)
+	if (cells[pos.y][pos.x - 1] == Tiles::Wall)		// left
 	{
 		attr |= 8;
-		cellsAttr[row][col - 1] |= 2;
+		cellsAttr[pos.y][pos.x - 1] |= 2;
 	}
 
-	cellsAttr[row][col] = attr;
+	cellsAttr[pos.y][pos.x] = attr;
 }
 
-void World::removeWall(int col, int row)
+void World::removeWall(const Vec2& pos)
 {
-	cells[row][col] = 0;
+	if (!isValidPos(pos))
+		return;
 
-	if (getCellUp(col, row) == 1)
-		cellsAttr[row - 1][col] &= ~4;
-	if (getCellRight(col, row) == 1)
-		cellsAttr[row][col + 1] &= ~8;
-	if (getCellDown(col, row) == 1)
-		cellsAttr[row + 1][col] &= ~1;
-	if (getCellLeft(col, row) == 1)
-		cellsAttr[row][col - 1] &= ~2;
+	cells[pos.y][pos.x] = static_cast<int>(Tiles::Space);
+
+	if (cells[pos.y - 1][pos.x] == Tiles::Wall)		// up
+		cellsAttr[pos.y - 1][pos.x] &= ~4;
+	if (cells[pos.y][pos.x + 1] == Tiles::Wall)		// right
+		cellsAttr[pos.y][pos.x + 1] &= ~8;
+	if (cells[pos.y + 1][pos.x] == Tiles::Wall)		// down
+		cellsAttr[pos.y + 1][pos.x] &= ~1;
+	if (cells[pos.y][pos.x - 1] == Tiles::Wall)		// left
+		cellsAttr[pos.y][pos.x - 1] &= ~2;
+}
+
+void World::moveWorker(const Vec2& pos)
+{
+	worker.clearPath();
+	Vec2 start = worker.getCellPos();
+
+	MP_VECTOR< void* > path;
+	float totalCost = 0;
+	microPather.Reset();	//TODO: reset only when world has changes
+	int result = microPather.Solve(vec2ToGraphState(start), vec2ToGraphState(pos), &path, &totalCost);
+
+	if (!result)
+		for (size_t i = 1; i < path.size(); ++i)
+		{
+			Vec2 p = graphStateToVec2(path[i]);
+			std::cout << graphStateToVec2(path[i]).x << ":" << graphStateToVec2(path[i]).y << std::endl;
+			worker.addPath(p * 64);
+		}
 }
 
 SDL2pp::Point World::screenToWorld(int x, int y, float scale, float shiftX, float shiftY) const
@@ -114,29 +159,56 @@ SDL2pp::Point World::screenToWorld(int x, int y, float scale, float shiftX, floa
 	return SDL2pp::Point(static_cast<int>(resultX), static_cast<int>(resultY));
 }
 
-uint32_t World::getCell(int col, int row) const
+Vec2 World::graphStateToVec2(void *node)
 {
-	if ((col < 0) || (col >= COL_COUNT) || (row < 0) || (row >= ROW_COUNT))
-		return 0;
-	return cells[row][col];
+	uintptr_t index = reinterpret_cast<uintptr_t>(node);
+	int y = index / COL_COUNT;
+	int x = index - y * COL_COUNT;
+	return Vec2(x, y);
 }
 
-uint32_t World::getCellUp(int col, int row) const
+void *World::vec2ToGraphState(const Vec2& point)
 {
-	return getCell(col, row - 1);
+	return reinterpret_cast<void*>(static_cast<uintptr_t>(point.y * COL_COUNT + point.x));
 }
 
-uint32_t World::getCellRight(int col, int row) const
+float World::LeastCostEstimate(void* stateStart, void* stateEnd)
 {
-	return getCell(col + 1, row);
+	Vec2 start = graphStateToVec2(stateStart);
+	Vec2 end = graphStateToVec2(stateEnd);
+	return static_cast<float>(start.distance(end));
 }
 
-uint32_t World::getCellDown(int col, int row) const
+void World::AdjacentCost(void* state, MP_VECTOR< micropather::StateCost > *adjacent)
 {
-	return getCell(col, row + 1);
-}
+	Vec2 pos = graphStateToVec2(state);
 
-uint32_t World::getCellLeft(int col, int row) const
-{
-	return getCell(col - 1, row);
+	bool up = false;
+	if (cells[pos.y - 1][pos.x] == Tiles::Space)		// up
+	{
+		up = true;
+		micropather::StateCost nodeCost = { vec2ToGraphState(Vec2(pos.x, pos.y - 1)), 1.f };
+		adjacent->push_back(nodeCost);
+	}
+	bool right = false;
+	if (cells[pos.y][pos.x + 1] == Tiles::Space)		// right
+	{
+		right = true;
+		micropather::StateCost nodeCost = { vec2ToGraphState(Vec2(pos.x + 1, pos.y)), 1.f };
+		adjacent->push_back(nodeCost);
+	}
+	bool down = false;
+	if (cells[pos.y + 1][pos.x] == Tiles::Space)		// down
+	{
+		down = true;
+		micropather::StateCost nodeCost = { vec2ToGraphState(Vec2(pos.x, pos.y + 1)), 1.f };
+		adjacent->push_back(nodeCost);
+	}
+	bool left = false;
+	if (cells[pos.y][pos.x - 1] == Tiles::Space)		// left
+	{
+		left = true;
+		micropather::StateCost nodeCost = { vec2ToGraphState(Vec2(pos.x - 1, pos.y)), 1.f };
+		adjacent->push_back(nodeCost);
+	}
 }

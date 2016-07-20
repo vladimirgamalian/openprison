@@ -9,7 +9,8 @@ Worker::Worker(SDL2pp::Renderer& renderer) : renderer(renderer)
 		textures[i] = std::unique_ptr<SDL2pp::Texture>(new SDL2pp::Texture(renderer, fileName));
 	}
 
-	setDebugPath();
+	pos.x = 64;
+	pos.y = 64;
 }
 
 void Worker::draw()
@@ -51,17 +52,18 @@ void Worker::update()
 		cursor++;
 }
 
-void Worker::setDebugPath()
+void Worker::clearPath()
 {
-	path.push_back({ 64, 0 });
-	path.push_back({ 64, 64 });
-	path.push_back({ 64, 128 });
-	path.push_back({ 128, 128 });
-	path.push_back({ 128, 196 });
-	path.push_back({ 64, 196 });
-	path.push_back({ 0, 196 });
-	path.push_back({ 0, 128 });
-	path.push_back({ 0, 64 });
-	path.push_back({ 0, 0 });
+	path.clear();
 	cursor = 0;
+}
+
+void Worker::addPath(const Vec2& pos)
+{
+	path.push_back(pos);
+}
+
+Vec2 Worker::getCellPos() const
+{
+	return Vec2(pos.x / 64, pos.y / 64);
 }
