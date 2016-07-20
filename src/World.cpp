@@ -46,7 +46,7 @@ void World::draw(float scale, float shiftX, float shiftY)
 	worker.draw();
 
 	renderer.SetScale(1.f, 1.f);
-	renderer.Copy(tux, SDL2pp::NullOpt, SDL2pp::Point(0, 0));
+	renderer.Copy(tux, SDL2pp::NullOpt, SDL2pp::Point(0, 400));
 }
 
 void World::update()

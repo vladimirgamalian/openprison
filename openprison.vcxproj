@@ -18,16 +18,20 @@
     <ClCompile Include="src\main.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='UnitTest|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="src\micropather.cpp" />
     <ClCompile Include="src\unitTests\UnitTestRunner.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="src\Vec2.cpp" />
     <ClCompile Include="src\Worker.cpp" />
     <ClCompile Include="src\World.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\micropather.h" />
     <ClInclude Include="src\unitTests\catch.hpp" />
     <ClInclude Include="src\Utils.h" />
+    <ClInclude Include="src\Vec2.h" />
     <ClInclude Include="src\Worker.h" />
     <ClInclude Include="src\World.h" />
   </ItemGroup>
