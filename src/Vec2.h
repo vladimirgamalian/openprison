@@ -1,4 +1,5 @@
 #pragma once
+#include <SDL2pp/Point.hh>
 
 class Vec2
 {
@@ -6,6 +7,8 @@ public:
     Vec2() : x(0), y(0) {}
 
     Vec2(int x, int y) : x(x), y(y) {}
+
+	Vec2(const SDL2pp::Point& point) : x(point.x), y(point.y) {}
 
     Vec2 operator + (const Vec2 &other) const
     {
@@ -71,6 +74,17 @@ public:
     }
 
     double distance(const Vec2& other) const;
+
+	void reset()
+	{
+		x = 0;
+		y = 0;
+	}
+
+	operator SDL2pp::Point()
+	{
+		return SDL2pp::Point(x, y);
+	}
 
     int x, y;
 };

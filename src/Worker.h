@@ -12,9 +12,10 @@ public:
 	void setDebugPath();
 
 private:
-	std::unique_ptr<SDL2pp::Texture> textures[3];
+	std::unique_ptr<SDL2pp::Texture> textures[4];
 	SDL2pp::Renderer& renderer;
-	SDL2pp::Point pos;
+	Vec2 pos;
 	std::vector<Vec2> path;
 	size_t cursor = 0;
+	Vec2 direction;
 };
