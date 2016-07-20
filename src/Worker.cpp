@@ -1,7 +1,8 @@
 #include "Worker.h"
 #include "Utils.h"
+#include "World.h"
 
-Worker::Worker(SDL2pp::Renderer& renderer) : renderer(renderer)
+Worker::Worker(SDL2pp::Renderer& renderer, World* world) : renderer(renderer), world(world)
 {
 	for (int i = 0; i < 4; ++i)
 	{
@@ -66,4 +67,27 @@ void Worker::addPath(const Vec2& pos)
 Vec2 Worker::getCellPos() const
 {
 	return Vec2(pos.x / 64, pos.y / 64);
+}
+
+void Worker::setTarget(const Vec2& pos)
+{
+	target = pos;
+	resolvePath();
+}
+
+void Worker::resolvePath()
+{
+	clearPath();
+
+	MP_VECTOR< void* > path;
+	float totalCost = 0;
+	int result = world->patherSolve(getCellPos(), target, path, &totalCost);
+
+	if (!result)
+		for (size_t i = 1; i < path.size(); ++i)
+		{
+			Vec2 p = world->graphStateToVec2(path[i]);
+			//std::cout << graphStateToVec2(path[i]).x << ":" << graphStateToVec2(path[i]).y << std::endl;
+			addPath(p * 64);
+		}
 }

@@ -3,7 +3,7 @@
 
 World::World(SDL2pp::Renderer& renderer) : 
 	renderer(renderer),
-	worker(renderer),
+	worker(renderer, this),
 	microPather(this),
 	dirt(renderer, "data/tileset/ground/dirt.png"),
 	border(renderer, "data/tileset/border.png"),
@@ -108,6 +108,9 @@ void World::setWall(const Vec2& pos)
 	}
 
 	cellsAttr[pos.y][pos.x] = attr;
+
+	microPather.Reset();
+	worker.resolvePath();
 }
 
 void World::removeWall(const Vec2& pos)
@@ -125,25 +128,14 @@ void World::removeWall(const Vec2& pos)
 		cellsAttr[pos.y + 1][pos.x] &= ~1;
 	if (cells[pos.y][pos.x - 1] == Tiles::Wall)		// left
 		cellsAttr[pos.y][pos.x - 1] &= ~2;
+
+	microPather.Reset();
+	worker.resolvePath();
 }
 
 void World::moveWorker(const Vec2& pos)
 {
-	worker.clearPath();
-	Vec2 start = worker.getCellPos();
-
-	MP_VECTOR< void* > path;
-	float totalCost = 0;
-	microPather.Reset();	//TODO: reset only when world has changes
-	int result = microPather.Solve(vec2ToGraphState(start), vec2ToGraphState(pos), &path, &totalCost);
-
-	if (!result)
-		for (size_t i = 1; i < path.size(); ++i)
-		{
-			Vec2 p = graphStateToVec2(path[i]);
-			//std::cout << graphStateToVec2(path[i]).x << ":" << graphStateToVec2(path[i]).y << std::endl;
-			worker.addPath(p * 64);
-		}
+	worker.setTarget(pos);
 }
 
 SDL2pp::Point World::screenToWorld(int x, int y, float scale, float shiftX, float shiftY) const
@@ -247,4 +239,9 @@ void World::AdjacentCost(void* state, MP_VECTOR< micropather::StateCost > *adjac
 			adjacent->push_back(nodeCost);
 		}
 	}
+}
+
+int World::patherSolve(const Vec2& start, const Vec2& finish, MP_VECTOR< void* >& path, float* totalCost)
+{
+	return microPather.Solve(vec2ToGraphState(start), vec2ToGraphState(finish), &path, totalCost);
 }

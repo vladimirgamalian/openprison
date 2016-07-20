@@ -18,7 +18,11 @@ public:
 
 	void moveWorker(const Vec2& pos);
 
+	int patherSolve(const Vec2& start, const Vec2& finish, MP_VECTOR< void* >& path, float* totalCost);
+
 	SDL2pp::Point screenToWorld(int x, int y, float scale, float shiftX, float shiftY) const;
+
+	Vec2 graphStateToVec2(void *node);
 
 private:
 
@@ -41,7 +45,7 @@ private:
 		return (x > 0) && (x < COL_COUNT - 1) && (y > 0) && (y < ROW_COUNT - 1);
 	}
 
-	Vec2 graphStateToVec2(void *node);
+
 	void *vec2ToGraphState(const Vec2& point);
 	virtual float LeastCostEstimate(void* stateStart, void* stateEnd);
 	virtual void AdjacentCost(void* state, MP_VECTOR< micropather::StateCost > *adjacent);
