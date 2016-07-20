@@ -141,7 +141,7 @@ void World::moveWorker(const Vec2& pos)
 		for (size_t i = 1; i < path.size(); ++i)
 		{
 			Vec2 p = graphStateToVec2(path[i]);
-			std::cout << graphStateToVec2(path[i]).x << ":" << graphStateToVec2(path[i]).y << std::endl;
+			//std::cout << graphStateToVec2(path[i]).x << ":" << graphStateToVec2(path[i]).y << std::endl;
 			worker.addPath(p * 64);
 		}
 }
@@ -210,5 +210,41 @@ void World::AdjacentCost(void* state, MP_VECTOR< micropather::StateCost > *adjac
 		left = true;
 		micropather::StateCost nodeCost = { vec2ToGraphState(Vec2(pos.x - 1, pos.y)), 1.f };
 		adjacent->push_back(nodeCost);
+	}
+
+	if (up && right)
+	{
+		if (cells[pos.y - 1][pos.x + 1] == Tiles::Space)		// up-right
+		{
+			micropather::StateCost nodeCost = { vec2ToGraphState(Vec2(pos.x + 1, pos.y - 1)), 1.41f };
+			adjacent->push_back(nodeCost);
+		}
+	}
+
+	if (right && down)
+	{
+		if (cells[pos.y + 1][pos.x + 1] == Tiles::Space)		// right-down
+		{
+			micropather::StateCost nodeCost = { vec2ToGraphState(Vec2(pos.x + 1, pos.y + 1)), 1.41f };
+			adjacent->push_back(nodeCost);
+		}
+	}
+
+	if (down && left)
+	{
+		if (cells[pos.y + 1][pos.x - 1] == Tiles::Space)		// down-left
+		{
+			micropather::StateCost nodeCost = { vec2ToGraphState(Vec2(pos.x - 1, pos.y + 1)), 1.41f };
+			adjacent->push_back(nodeCost);
+		}
+	}
+
+	if (left && up)
+	{
+		if (cells[pos.y - 1][pos.x - 1] == Tiles::Space)		// left-up
+		{
+			micropather::StateCost nodeCost = { vec2ToGraphState(Vec2(pos.x - 1, pos.y - 1)), 1.41f };
+			adjacent->push_back(nodeCost);
+		}
 	}
 }
