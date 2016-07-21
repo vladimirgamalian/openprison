@@ -2,7 +2,12 @@
 #include "Utils.h"
 #include "World.h"
 
-Worker::Worker(SDL2pp::Renderer& renderer, World* world) : renderer(renderer), world(world)
+
+Worker::Worker(SDL2pp::Renderer& renderer, World* world) : 
+	renderer(renderer),
+	world(world),
+	buildWallAnimSeq(0),
+	hammer(renderer, "data/tools/hammer.png")
 {
 	for (int i = 0; i < 4; ++i)
 	{
@@ -12,6 +17,9 @@ Worker::Worker(SDL2pp::Renderer& renderer, World* world) : renderer(renderer), w
 
 	pos.x = 64;
 	pos.y = 64;
+
+	buildWallAnimSeq.then<choreograph::RampTo>(90, 1.0, choreograph::EaseInQuad())
+		.then<choreograph::RampTo>(0, 1.0, choreograph::EaseOutQuad());
 }
 
 void Worker::draw()
@@ -31,7 +39,11 @@ void Worker::draw()
 
 	if (workerState == WorkerState::BuildWall)
 	{
-
+		//Renderer& Copy(Texture& texture, const Optional<Rect>& srcrect, 
+		// const SDL2pp::Point& dstpoint, double angle,
+		// const Optional<Point>& center = NullOpt, int flip = 0);
+		double angel = buildWallAnimSeq.getValue(static_cast<float>(buildWallPhase % 120) / 60);
+		renderer.Copy(hammer, SDL2pp::NullOpt, pos + Vec2(0, -16), angel, SDL2pp::Point(16, 48), (variant == 1) ? 1 : 0);
 	}
 }
 
@@ -126,7 +138,7 @@ void Worker::updateMoving()
 void Worker::updateBuildWall()
 {
 	buildWallPhase++;
-	if (buildWallPhase >= 120)
+	if (buildWallPhase >= 360)
 	{
 		workerState = WorkerState::Donothing;
 		world->setWall(workerTask.pos);

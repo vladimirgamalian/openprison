@@ -32,8 +32,8 @@ World::World(SDL2pp::Renderer& renderer) :
 	}
 
 	// test worker task
-	workerTaskQueue.push(WorkerTask(WorkerTask::TaskType::BuildWall, Vec2(10, 5)));
-	workerTaskQueue.push(WorkerTask(WorkerTask::TaskType::BuildWall, Vec2(3, 8)));
+	workerTaskQueue.push(WorkerTask(WorkerTask::TaskType::BuildWall, Vec2(2, 1)));
+	workerTaskQueue.push(WorkerTask(WorkerTask::TaskType::BuildWall, Vec2(3, 1)));
 }
 
 void World::draw(float scale, float shiftX, float shiftY)

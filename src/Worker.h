@@ -3,6 +3,7 @@
 #include <vector>
 #include "Vec2.h"
 #include "WorkerTaskQueue.h"
+#include "choreograph/Choreograph.h"
 
 class World;
 
@@ -34,7 +35,9 @@ private:
 
 	SDL2pp::Renderer& renderer;
 	World* world;
+	choreograph::Sequence<float> buildWallAnimSeq;
 	std::unique_ptr<SDL2pp::Texture> textures[4];
+	SDL2pp::Texture hammer;
 	Vec2 pos;
 	std::vector<Vec2> path;
 	size_t cursor = 0;
@@ -43,4 +46,5 @@ private:
 	int workerState = WorkerState::Donothing;
 	WorkerTask workerTask;
 	int buildWallPhase;
+
 };

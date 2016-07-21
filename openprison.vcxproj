@@ -15,6 +15,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\choreograph\Cue.cpp" />
+    <ClCompile Include="src\choreograph\Timeline.cpp" />
+    <ClCompile Include="src\choreograph\TimelineItem.cpp" />
     <ClCompile Include="src\main.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='UnitTest|Win32'">true</ExcludedFromBuild>
     </ClCompile>
@@ -29,6 +32,26 @@
     <ClCompile Include="src\World.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\choreograph\Choreograph.h" />
+    <ClInclude Include="src\choreograph\Cue.h" />
+    <ClInclude Include="src\choreograph\detail\MakeUnique.hpp" />
+    <ClInclude Include="src\choreograph\detail\VectorManipulation.hpp" />
+    <ClInclude Include="src\choreograph\Easing.h" />
+    <ClInclude Include="src\choreograph\Motion.hpp" />
+    <ClInclude Include="src\choreograph\Output.hpp" />
+    <ClInclude Include="src\choreograph\Phrase.hpp" />
+    <ClInclude Include="src\choreograph\phrase\Combine.hpp" />
+    <ClInclude Include="src\choreograph\phrase\Hold.hpp" />
+    <ClInclude Include="src\choreograph\phrase\Procedural.hpp" />
+    <ClInclude Include="src\choreograph\phrase\Ramp.hpp" />
+    <ClInclude Include="src\choreograph\phrase\Retime.hpp" />
+    <ClInclude Include="src\choreograph\phrase\Sugar.hpp" />
+    <ClInclude Include="src\choreograph\Sequence.hpp" />
+    <ClInclude Include="src\choreograph\specialization\CinderSpecialization.hpp" />
+    <ClInclude Include="src\choreograph\Timeline.h" />
+    <ClInclude Include="src\choreograph\TimelineItem.h" />
+    <ClInclude Include="src\choreograph\TimelineOptions.hpp" />
+    <ClInclude Include="src\choreograph\TimeType.h" />
     <ClInclude Include="src\micropather.h" />
     <ClInclude Include="src\unitTests\catch.hpp" />
     <ClInclude Include="src\Utils.h" />
@@ -81,17 +104,17 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Libraries\include;$(IncludePath)</IncludePath>
+    <IncludePath>.\src;C:\Libraries\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Libraries;C:\Libraries\lib;C:\Libraries\lib\SDL2\VS2015\Win32\Debug;C:\Libraries\lib\SDL2pp\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='UnitTest|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Libraries\include;$(IncludePath)</IncludePath>
+    <IncludePath>.\src;C:\Libraries\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Libraries\lib;C:\Libraries\lib\SDL2\VS2015\Win32\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>C:\Libraries\include;$(IncludePath)</IncludePath>
+    <IncludePath>.\src;C:\Libraries\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Libraries;C:\Libraries\lib;C:\Libraries\lib\SDL2\VS2015\Win32\Release;C:\Libraries\lib\SDL2pp\Release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
