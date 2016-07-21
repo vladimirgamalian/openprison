@@ -78,7 +78,7 @@ int main(int argc, char *args[])
 						else if (event.button.button == SDL_BUTTON_RIGHT)
 							world->removeWall(cellPos);
 						else if (event.button.button == SDL_BUTTON_MIDDLE)
-							world->moveWorker(cellPos);
+							;// world->moveWorker(cellPos);
 					}
 					break;
 				}

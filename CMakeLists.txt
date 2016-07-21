@@ -14,6 +14,7 @@ set(SOURCE_FILES
 	./src/Vec2.cpp
 	./src/Worker.cpp
 	./src/World.cpp
+	./src/WorkerTaskQueue.cpp
 	./src/main.cpp)
 
 add_executable(openprison ${SOURCE_FILES})

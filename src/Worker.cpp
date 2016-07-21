@@ -25,32 +25,33 @@ void Worker::draw()
 		variant = 3;
 	if (direction.x > 0)
 		variant = 1;
+
 	SDL2pp::Texture* texture = textures[variant].get();
 	renderer.Copy(*texture, SDL2pp::NullOpt, pos);
+
+	if (workerState == WorkerState::BuildWall)
+	{
+
+	}
 }
 
 void Worker::update()
 {
-	if (cursor >= path.size())
-		return;
-	Vec2 target = path[cursor];
+	if (workerState == WorkerState::Donothing)
+	{
+		// Get a task from Worker Task Queue
+		if (!world->popWorkerTask(workerTask))
+			return;
 
-	direction.reset();
+		setTarget(workerTask.pos);
+		workerState = WorkerState::Moving;
+	}
 
-	if (target.x > pos.x)
-		direction.x = 1;
-	else if (target.x != pos.x)
-		direction.x = -1;
-
-	if (target.y > pos.y)
-		direction.y = 1;
-	else if (target.y != pos.y)
-		direction.y = -1;
-
-	pos += direction;
-
-	if ((target.x == pos.x) && (target.y == pos.y))
-		cursor++;
+	if (workerState == WorkerState::Moving)
+		updateMoving();
+	
+	if (workerState == WorkerState::BuildWall)
+		updateBuildWall();
 }
 
 void Worker::clearPath()
@@ -90,4 +91,44 @@ void Worker::resolvePath()
 			//std::cout << graphStateToVec2(path[i]).x << ":" << graphStateToVec2(path[i]).y << std::endl;
 			addPath(p * 64);
 		}
+}
+
+void Worker::updateMoving()
+{
+	if (cursor >= path.size())
+	{
+		// Has got the target cell, run build animation
+		workerState = WorkerState::BuildWall;
+		buildWallPhase = 0;
+		return;
+	}
+
+	Vec2 target = path[cursor];
+
+	direction.reset();
+
+	if (target.x > pos.x)
+		direction.x = 1;
+	else if (target.x != pos.x)
+		direction.x = -1;
+
+	if (target.y > pos.y)
+		direction.y = 1;
+	else if (target.y != pos.y)
+		direction.y = -1;
+
+	pos += direction;
+
+	if ((target.x == pos.x) && (target.y == pos.y))
+		cursor++;
+}
+
+void Worker::updateBuildWall()
+{
+	buildWallPhase++;
+	if (buildWallPhase >= 120)
+	{
+		workerState = WorkerState::Donothing;
+		world->setWall(workerTask.pos);
+	}
 }

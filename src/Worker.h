@@ -2,6 +2,7 @@
 #include <SDL2pp/SDL2pp.hh>
 #include <vector>
 #include "Vec2.h"
+#include "WorkerTaskQueue.h"
 
 class World;
 
@@ -18,6 +19,19 @@ public:
 	void resolvePath();
 
 private:
+	struct WorkerState
+	{
+		enum
+		{
+			Donothing,
+			Moving,
+			BuildWall
+		};
+	};
+
+	void updateMoving();
+	void updateBuildWall();
+
 	SDL2pp::Renderer& renderer;
 	World* world;
 	std::unique_ptr<SDL2pp::Texture> textures[4];
@@ -26,4 +40,7 @@ private:
 	size_t cursor = 0;
 	Vec2 direction;
 	Vec2 target;
+	int workerState = WorkerState::Donothing;
+	WorkerTask workerTask;
+	int buildWallPhase;
 };

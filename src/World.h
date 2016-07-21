@@ -2,6 +2,7 @@
 #include <SDL2pp/SDL2pp.hh>
 #include "Worker.h"
 #include "micropather.h"
+#include "WorkerTaskQueue.h"
 
 class World : private micropather::Graph
 {
@@ -23,6 +24,9 @@ public:
 	SDL2pp::Point screenToWorld(int x, int y, float scale, float shiftX, float shiftY) const;
 
 	Vec2 graphStateToVec2(void *node);
+
+	bool popWorkerTask(WorkerTask& workerTask);
+	void pushWorkerTask(const WorkerTask& workerTask);
 
 private:
 
@@ -59,6 +63,7 @@ private:
 	SDL2pp::Texture tux;
 	std::unique_ptr<SDL2pp::Texture> walls[16];
 
+	WorkerTaskQueue workerTaskQueue;
 
 	uint32_t cells[ROW_COUNT][COL_COUNT];
 	uint32_t cellsAttr[ROW_COUNT][COL_COUNT];

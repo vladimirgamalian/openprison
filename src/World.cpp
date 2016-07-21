@@ -30,6 +30,10 @@ World::World(SDL2pp::Renderer& renderer) :
 		cells[row][0] = static_cast<int>(Tiles::Border);
 		cells[row][COL_COUNT - 1] = static_cast<int>(Tiles::Border);
 	}
+
+	// test worker task
+	workerTaskQueue.push(WorkerTask(WorkerTask::TaskType::BuildWall, Vec2(10, 5)));
+	workerTaskQueue.push(WorkerTask(WorkerTask::TaskType::BuildWall, Vec2(3, 8)));
 }
 
 void World::draw(float scale, float shiftX, float shiftY)
@@ -244,4 +248,14 @@ void World::AdjacentCost(void* state, MP_VECTOR< micropather::StateCost > *adjac
 int World::patherSolve(const Vec2& start, const Vec2& finish, MP_VECTOR< void* >& path, float* totalCost)
 {
 	return microPather.Solve(vec2ToGraphState(start), vec2ToGraphState(finish), &path, totalCost);
+}
+
+bool World::popWorkerTask(WorkerTask& workerTask)
+{
+	return workerTaskQueue.pop(workerTask);
+}
+
+void World::pushWorkerTask(const WorkerTask& workerTask)
+{
+	workerTaskQueue.push(workerTask);
 }
