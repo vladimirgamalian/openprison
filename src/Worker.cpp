@@ -22,6 +22,11 @@ Worker::Worker(SDL2pp::Renderer& renderer, World* world) :
 		.then<choreograph::RampTo>(0, 1.0, choreograph::EaseOutQuad());
 }
 
+void Worker::setPos(const Vec2& pos)
+{
+	this->pos = pos * 64;
+}
+
 void Worker::draw()
 {
 	int variant = 2;

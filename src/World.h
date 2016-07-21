@@ -16,8 +16,7 @@ public:
 
 	void setWall(const Vec2& pos);
 	void removeWall(const Vec2& pos);
-
-	void moveWorker(const Vec2& pos);
+	void addWallBuildTask(const Vec2& pos);
 
 	int patherSolve(const Vec2& start, const Vec2& finish, MP_VECTOR< void* >& path, float* totalCost);
 
@@ -56,7 +55,8 @@ private:
 	virtual void  PrintStateInfo(void* state) {};
 
 	SDL2pp::Renderer& renderer;
-	Worker worker;
+	Worker worker0;
+	Worker worker1;
 	micropather::MicroPather microPather;
 	SDL2pp::Texture dirt;
 	SDL2pp::Texture border;

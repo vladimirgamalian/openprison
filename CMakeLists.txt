@@ -20,5 +20,5 @@ set(SOURCE_FILES
 	./src/choreograph/Cue.cpp
 	./src/main.cpp)
 
-add_executable(openprison ${SOURCE_FILES} ${СHOREOGRAPH_SOURCE_FILES})
+add_executable(openprison ${SOURCE_FILES})
 target_link_libraries(openprison ${SDL2PP_LIBRARIES})

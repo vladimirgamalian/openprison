@@ -74,11 +74,11 @@ int main(int argc, char *args[])
 						SDL2pp::Point cellPos = world->screenToWorld(x, y, worldScale, shiftX, shiftY);
 						//std::cout << "WORLD POS " << cellPos << std::endl;
 						if (event.button.button == SDL_BUTTON_LEFT)
-							world->setWall(cellPos);
+							world->addWallBuildTask(cellPos);
 						else if (event.button.button == SDL_BUTTON_RIGHT)
 							world->removeWall(cellPos);
 						else if (event.button.button == SDL_BUTTON_MIDDLE)
-							;// world->moveWorker(cellPos);
+							world->setWall(cellPos);
 					}
 					break;
 				}

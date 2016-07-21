@@ -18,6 +18,7 @@ public:
 	Vec2 getCellPos() const;
 	void setTarget(const Vec2& pos);
 	void resolvePath();
+	void setPos(const Vec2& pos);
 
 private:
 	struct WorkerState

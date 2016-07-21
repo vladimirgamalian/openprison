@@ -3,7 +3,8 @@
 
 World::World(SDL2pp::Renderer& renderer) : 
 	renderer(renderer),
-	worker(renderer, this),
+	worker0(renderer, this),
+	worker1(renderer, this),
 	microPather(this),
 	dirt(renderer, "data/tileset/ground/dirt.png"),
 	border(renderer, "data/tileset/border.png"),
@@ -31,9 +32,17 @@ World::World(SDL2pp::Renderer& renderer) :
 		cells[row][COL_COUNT - 1] = static_cast<int>(Tiles::Border);
 	}
 
+	worker0.setPos({ 3, 2 });
+	worker1.setPos({ 3, 3 });
+
 	// test worker task
-	workerTaskQueue.push(WorkerTask(WorkerTask::TaskType::BuildWall, Vec2(2, 1)));
-	workerTaskQueue.push(WorkerTask(WorkerTask::TaskType::BuildWall, Vec2(3, 1)));
+	//workerTaskQueue.push(WorkerTask(WorkerTask::TaskType::BuildWall, Vec2(2, 1)));
+	//workerTaskQueue.push(WorkerTask(WorkerTask::TaskType::BuildWall, Vec2(3, 1)));
+}
+
+void World::addWallBuildTask(const Vec2& pos)
+{
+	workerTaskQueue.push(WorkerTask(WorkerTask::TaskType::BuildWall, pos));
 }
 
 void World::draw(float scale, float shiftX, float shiftY)
@@ -71,7 +80,8 @@ void World::draw(float scale, float shiftX, float shiftY)
 		}
 	}
 
-	worker.draw();
+	worker0.draw();
+	worker1.draw();
 
 	renderer.SetScale(1.f, 1.f);
 	renderer.Copy(tux, SDL2pp::NullOpt, SDL2pp::Point(0, 400));
@@ -79,7 +89,8 @@ void World::draw(float scale, float shiftX, float shiftY)
 
 void World::update()
 {
-	worker.update();
+	worker0.update();
+	worker1.update();
 }
 
 void World::setWall(const Vec2& pos)
@@ -114,7 +125,8 @@ void World::setWall(const Vec2& pos)
 	cellsAttr[pos.y][pos.x] = attr;
 
 	microPather.Reset();
-	worker.resolvePath();
+	worker0.resolvePath();
+	worker1.resolvePath();
 }
 
 void World::removeWall(const Vec2& pos)
@@ -134,12 +146,8 @@ void World::removeWall(const Vec2& pos)
 		cellsAttr[pos.y][pos.x - 1] &= ~2;
 
 	microPather.Reset();
-	worker.resolvePath();
-}
-
-void World::moveWorker(const Vec2& pos)
-{
-	worker.setTarget(pos);
+	worker0.resolvePath();
+	worker1.resolvePath();
 }
 
 SDL2pp::Point World::screenToWorld(int x, int y, float scale, float shiftX, float shiftY) const
