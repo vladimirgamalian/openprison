@@ -15,6 +15,7 @@ set(SOURCE_FILES
 	./src/Worker.cpp
 	./src/World.cpp
 	./src/WorkerTaskQueue.cpp
+	./src/Box.cpp
 	./src/choreograph/Timeline.cpp
 	./src/choreograph/TimelineItem.cpp
 	./src/choreograph/Cue.cpp

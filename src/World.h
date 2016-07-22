@@ -3,6 +3,7 @@
 #include "Worker.h"
 #include "micropather.h"
 #include "WorkerTaskQueue.h"
+#include "Box.h"
 
 class World : private micropather::Graph
 {
@@ -57,6 +58,7 @@ private:
 	SDL2pp::Renderer& renderer;
 	Worker worker0;
 	Worker worker1;
+	Box box;
 	micropather::MicroPather microPather;
 	SDL2pp::Texture dirt;
 	SDL2pp::Texture border;

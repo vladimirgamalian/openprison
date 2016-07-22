@@ -5,6 +5,7 @@ World::World(SDL2pp::Renderer& renderer) :
 	renderer(renderer),
 	worker0(renderer, this),
 	worker1(renderer, this),
+	box(renderer),
 	microPather(this),
 	dirt(renderer, "data/tileset/ground/dirt.png"),
 	border(renderer, "data/tileset/border.png"),
@@ -35,9 +36,13 @@ World::World(SDL2pp::Renderer& renderer) :
 	worker0.setPos({ 3, 2 });
 	worker1.setPos({ 3, 3 });
 
+	box.setPos({ 5, 2 });
+
 	// test worker task
 	//workerTaskQueue.push(WorkerTask(WorkerTask::TaskType::BuildWall, Vec2(2, 1)));
 	//workerTaskQueue.push(WorkerTask(WorkerTask::TaskType::BuildWall, Vec2(3, 1)));
+
+	workerTaskQueue.push(WorkerTask(WorkerTask::TaskType::MoveBox, {7, 4}, &box));
 }
 
 void World::addWallBuildTask(const Vec2& pos)
@@ -79,6 +84,8 @@ void World::draw(float scale, float shiftX, float shiftY)
 
 		}
 	}
+
+	box.draw();
 
 	worker0.draw();
 	worker1.draw();

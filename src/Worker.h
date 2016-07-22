@@ -45,6 +45,7 @@ private:
 	Vec2 direction;
 	Vec2 target;
 	int workerState = WorkerState::Donothing;
+	bool carrying = false;
 	WorkerTask workerTask;
 	int buildWallPhase;
 

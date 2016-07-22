@@ -60,7 +60,12 @@ void Worker::update()
 		if (!world->popWorkerTask(workerTask))
 			return;
 
-		setTarget(workerTask.pos);
+		if (workerTask.taskType == WorkerTask::TaskType::BuildWall)
+			setTarget(workerTask.pos0);
+		else if (workerTask.taskType == WorkerTask::TaskType::MoveBox)
+			setTarget(workerTask.box->getPos());
+
+
 		workerState = WorkerState::Moving;
 	}
 
@@ -114,10 +119,26 @@ void Worker::updateMoving()
 {
 	if (cursor >= path.size())
 	{
-		// Has got the target cell, run build animation
-		workerState = WorkerState::BuildWall;
-		buildWallPhase = 0;
-		return;
+		if (workerTask.taskType == WorkerTask::TaskType::BuildWall)
+		{
+			workerState = WorkerState::BuildWall;
+			buildWallPhase = 0;
+			return;
+		}
+		else if (workerTask.taskType == WorkerTask::TaskType::MoveBox)
+		{
+			if (carrying)
+			{
+				workerState = WorkerState::Donothing;
+				carrying = false;
+			}
+			else
+			{
+				setTarget(workerTask.pos0);
+				carrying = true;
+			}
+			return;
+		}
 	}
 
 	Vec2 target = path[cursor];
@@ -136,6 +157,11 @@ void Worker::updateMoving()
 
 	pos += direction;
 
+	if (carrying)
+	{
+		workerTask.box->setPosPx(pos);
+	}
+
 	if ((target.x == pos.x) && (target.y == pos.y))
 		cursor++;
 }
@@ -146,6 +172,6 @@ void Worker::updateBuildWall()
 	if (buildWallPhase >= 360)
 	{
 		workerState = WorkerState::Donothing;
-		world->setWall(workerTask.pos);
+		world->setWall(workerTask.pos0);
 	}
 }

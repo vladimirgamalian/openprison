@@ -15,6 +15,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Box.cpp" />
     <ClCompile Include="src\choreograph\Cue.cpp" />
     <ClCompile Include="src\choreograph\Timeline.cpp" />
     <ClCompile Include="src\choreograph\TimelineItem.cpp" />
@@ -32,6 +33,7 @@
     <ClCompile Include="src\World.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Box.h" />
     <ClInclude Include="src\choreograph\Choreograph.h" />
     <ClInclude Include="src\choreograph\Cue.h" />
     <ClInclude Include="src\choreograph\detail\MakeUnique.hpp" />
