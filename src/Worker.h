@@ -4,15 +4,16 @@
 #include "Vec2.h"
 #include "WorkerTaskQueue.h"
 #include "choreograph/Choreograph.h"
+#include "WorldObject.h"
 
 class World;
 
-class Worker
+class Worker : public WorldObject
 {
 public:
 	Worker(SDL2pp::Renderer& renderer, World* world);
-	void draw();
-	void update();
+	virtual void update() override;
+	virtual void draw() override;
 	void clearPath();
 	void addPath(const Vec2& pos);
 	Vec2 getCellPos() const;

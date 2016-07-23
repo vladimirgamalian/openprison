@@ -18,6 +18,7 @@ set(SOURCE_FILES
 	./src/Box.cpp
 	./src/DeliveryQueue.cpp
 	./src/Delivery.cpp
+	./src/AreaSelection.cpp
 	./src/choreograph/Timeline.cpp
 	./src/choreograph/TimelineItem.cpp
 	./src/choreograph/Cue.cpp

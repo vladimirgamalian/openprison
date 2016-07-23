@@ -6,6 +6,11 @@ Box::Box(SDL2pp::Renderer& renderer) :
 
 }
 
+void Box::update()
+{
+
+}
+
 void Box::draw()
 {
 	renderer.Copy(texture, SDL2pp::NullOpt, pos);

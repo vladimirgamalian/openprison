@@ -15,6 +15,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\AreaSelection.cpp" />
     <ClCompile Include="src\Box.cpp" />
     <ClCompile Include="src\choreograph\Cue.cpp" />
     <ClCompile Include="src\choreograph\Timeline.cpp" />
@@ -35,6 +36,7 @@
     <ClCompile Include="src\World.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\AreaSelection.h" />
     <ClInclude Include="src\Box.h" />
     <ClInclude Include="src\choreograph\Choreograph.h" />
     <ClInclude Include="src\choreograph\Cue.h" />
@@ -66,6 +68,7 @@
     <ClInclude Include="src\WorkerTask.h" />
     <ClInclude Include="src\WorkerTaskQueue.h" />
     <ClInclude Include="src\World.h" />
+    <ClInclude Include="src\WorldObject.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{D1356335-EF81-4A45-BEB1-58983CF72F39}</ProjectGuid>

@@ -1,12 +1,16 @@
 #pragma once
 #include <SDL2pp/SDL2pp.hh>
+#include "WorldObject.h"
 #include "Vec2.h"
 
-class Box
+class Box : private WorldObject
 {
 public:
 	Box(SDL2pp::Renderer& renderer);
-	void draw();
+
+	virtual void update() override;
+	virtual void draw() override;
+
 	void setPos(const Vec2& pos);
 	void setPosPx(const Vec2& pos);
 	Vec2 getPos() const;

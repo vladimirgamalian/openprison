@@ -6,6 +6,7 @@ World::World(SDL2pp::Renderer& renderer) :
 	worker0(renderer, this),
 	worker1(renderer, this),
 	box(renderer),
+	areaSelection(renderer),
 	microPather(this),
 	dirt(renderer, "data/tileset/ground/dirt.png"),
 	border(renderer, "data/tileset/border.png"),
@@ -32,6 +33,8 @@ World::World(SDL2pp::Renderer& renderer) :
 		cells[row][0] = static_cast<int>(Tiles::Border);
 		cells[row][COL_COUNT - 1] = static_cast<int>(Tiles::Border);
 	}
+
+	areaSelection.set({4, 4, 3, 3});
 
 	worker0.setPos({ 3, 2 });
 	worker1.setPos({ 3, 3 });
@@ -84,6 +87,8 @@ void World::draw(float scale, float shiftX, float shiftY)
 
 		}
 	}
+
+	areaSelection.draw();
 
 	box.draw();
 
