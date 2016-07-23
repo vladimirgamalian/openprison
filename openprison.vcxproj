@@ -19,6 +19,8 @@
     <ClCompile Include="src\choreograph\Cue.cpp" />
     <ClCompile Include="src\choreograph\Timeline.cpp" />
     <ClCompile Include="src\choreograph\TimelineItem.cpp" />
+    <ClCompile Include="src\Delivery.cpp" />
+    <ClCompile Include="src\DeliveryQueue.cpp" />
     <ClCompile Include="src\main.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='UnitTest|Win32'">true</ExcludedFromBuild>
     </ClCompile>
@@ -54,6 +56,8 @@
     <ClInclude Include="src\choreograph\TimelineItem.h" />
     <ClInclude Include="src\choreograph\TimelineOptions.hpp" />
     <ClInclude Include="src\choreograph\TimeType.h" />
+    <ClInclude Include="src\Delivery.h" />
+    <ClInclude Include="src\DeliveryQueue.h" />
     <ClInclude Include="src\micropather.h" />
     <ClInclude Include="src\unitTests\catch.hpp" />
     <ClInclude Include="src\Utils.h" />
