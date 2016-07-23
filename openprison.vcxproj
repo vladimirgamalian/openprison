@@ -15,6 +15,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\App.cpp" />
     <ClCompile Include="src\AreaSelection.cpp" />
     <ClCompile Include="src\Box.cpp" />
     <ClCompile Include="src\choreograph\Cue.cpp" />
@@ -35,6 +36,7 @@
     <ClCompile Include="src\World.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\App.h" />
     <ClInclude Include="src\AreaSelection.h" />
     <ClInclude Include="src\Box.h" />
     <ClInclude Include="src\choreograph\Choreograph.h" />
