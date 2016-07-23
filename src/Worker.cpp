@@ -143,7 +143,8 @@ void Worker::updateMoving()
 
 	Vec2 target = path[cursor];
 
-	direction.reset();
+	direction.SetX(0);
+	direction.SetY(0);
 
 	if (target.x > pos.x)
 		direction.x = 1;

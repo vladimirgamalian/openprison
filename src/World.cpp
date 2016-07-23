@@ -192,7 +192,7 @@ float World::LeastCostEstimate(void* stateStart, void* stateEnd)
 {
 	Vec2 start = graphStateToVec2(stateStart);
 	Vec2 end = graphStateToVec2(stateEnd);
-	return static_cast<float>(start.distance(end));
+	return static_cast<float>(distance(start, end));
 }
 
 void World::AdjacentCost(void* state, MP_VECTOR< micropather::StateCost > *adjacent)
