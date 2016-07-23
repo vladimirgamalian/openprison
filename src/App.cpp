@@ -146,11 +146,21 @@ void App::onMouseLeftDown(const Vec2& pos)
 {
 	selectionMode = true;
 	selectionPoint = world.screenToWorld(pos.GetX(), pos.GetY(), worldScale, shiftX, shiftY);
+	setSelection(selectionPoint);
 }
 
 void App::onMouseLeftUp(const Vec2& pos)
 {
 	selectionMode = false;
+	world.setAreaSelection(SDL2pp::Rect());
+
+	for (int row = selectionRect.GetY(); row <= selectionRect.GetY2(); ++row)
+	{
+		for (int col = selectionRect.GetX(); col <= selectionRect.GetX2(); ++col)
+		{
+			world.addWallBuildTask({ col, row });
+		}
+	}
 }
 
 void App::onMouseRightDown(const Vec2& pos)
@@ -166,12 +176,15 @@ void App::onMouseRightUp(const Vec2& pos)
 void App::onMouseMove(const Vec2& pos)
 {
 	if (selectionMode)
-	{
-		Vec2 p = world.screenToWorld(pos.GetX(), pos.GetY(), worldScale, shiftX, shiftY);
-		SDL2pp::Rect r(selectionPoint, p - selectionPoint);
-		normalizeRect(r);
-		r.SetW(r.GetW() + 1);
-		r.SetH(r.GetH() + 1);
-		world.setAreaSelection(r);
-	}
+		setSelection(world.screenToWorld(pos.GetX(), pos.GetY(), worldScale, shiftX, shiftY));
+}
+
+void App::setSelection(const Vec2& pos)
+{
+	SDL2pp::Rect r(selectionPoint, pos - selectionPoint);
+	normalizeRect(r);
+	r.SetW(r.GetW() + 1);
+	r.SetH(r.GetH() + 1);
+	world.setAreaSelection(r);
+	selectionRect = r;
 }

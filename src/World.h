@@ -31,6 +31,7 @@ public:
 
 	void setAreaSelection(const SDL2pp::Rect& r);
 
+
 private:
 
 	struct Tiles

@@ -34,8 +34,6 @@ World::World(SDL2pp::Renderer& renderer) :
 		cells[row][COL_COUNT - 1] = static_cast<int>(Tiles::Border);
 	}
 
-	areaSelection.set({4, 4, 3, 3});
-
 	worker0.setPos({ 3, 2 });
 	worker1.setPos({ 3, 3 });
 

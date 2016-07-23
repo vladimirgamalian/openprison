@@ -20,6 +20,8 @@ private:
 	void onMouseRightUp(const Vec2& pos);
 	void onMouseMove(const Vec2& pos);
 
+	void setSelection(const Vec2& pos);
+
 	SDL2pp::SDL sdl;
 	SDL2pp::Window window;
 	SDL2pp::Renderer renderer;
@@ -30,5 +32,7 @@ private:
 	float shiftX;
 	float shiftY;
 	bool selectionMode;
+	//TODO: one of two next field is reduntal
 	SDL2pp::Point selectionPoint;
+	SDL2pp::Rect selectionRect;
 };
