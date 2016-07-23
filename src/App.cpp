@@ -1,5 +1,6 @@
 #include "App.h"
 #include <SDL2/SDL.h>
+#include "Misc.h"
 
 App::App() :
 	sdl(SDL_INIT_VIDEO),
@@ -25,6 +26,7 @@ void App::init()
 	worldScale = 0.5f;
 	shiftX = 0;
 	shiftY = 0;
+	selectionMode = false;
 }
 
 void App::mainLoop()
@@ -39,8 +41,15 @@ void App::mainLoop()
 
 void App::update()
 {
-	const float shiftSpeed = 4.f;
+	processEvent();
+	world.update();
+	renderer.Clear();
+	world.draw(worldScale, shiftX, shiftY);
+}
 
+void App::processEvent()
+{
+	const float shiftSpeed = 4.f;
 	SDL_Event event;
 	while (SDL_PollEvent(&event))
 	{
@@ -80,29 +89,89 @@ void App::update()
 				worldScale += 0.1f;
 			if (y < 0)
 				worldScale -= 0.1f;
+			std::cout << "scale " << worldScale << std::endl;
 		}
 		break;
 		case SDL_MOUSEBUTTONDOWN:
 		{
-			int x = event.button.x;
-			int y = event.button.y;
-			//std::cout << "SDL_MOUSEBUTTONDOWN " << x << ":" << y << std::endl;
-			SDL2pp::Point cellPos = world.screenToWorld(x, y, worldScale, shiftX, shiftY);
-			//std::cout << "WORLD POS " << cellPos << std::endl;
+			Vec2 pos{ event.button.x, event.button.y };
+
 			if (event.button.button == SDL_BUTTON_LEFT)
-				world.addWallBuildTask(cellPos);
+				onMouseLeftDown(pos);
 			else if (event.button.button == SDL_BUTTON_RIGHT)
-				world.removeWall(cellPos);
-			else if (event.button.button == SDL_BUTTON_MIDDLE)
-				world.setWall(cellPos);
+				onMouseRightDown(pos);
+
+			//std::cout << "SDL_MOUSEBUTTONDOWN " << x << ":" << y << std::endl;
+			//SDL2pp::Point cellPos = world.screenToWorld(x, y, worldScale, shiftX, shiftY);
+			//std::cout << "WORLD POS " << cellPos << std::endl;
+			// 			if (event.button.button == SDL_BUTTON_LEFT)
+			// 				world.addWallBuildTask(cellPos);
+			// 			else if (event.button.button == SDL_BUTTON_RIGHT)
+			// 				world.removeWall(cellPos);
+			// 			else if (event.button.button == SDL_BUTTON_MIDDLE)
+			// 				world.setWall(cellPos);
 		}
 		break;
+		case SDL_MOUSEBUTTONUP:
+		{
+			Vec2 pos{ event.button.x, event.button.y };
+
+			if (event.button.button == SDL_BUTTON_LEFT)
+				onMouseLeftUp(pos);
+			else if (event.button.button == SDL_BUTTON_RIGHT)
+				onMouseRightUp(pos);
+
+			//std::cout << "SDL_MOUSEBUTTONDOWN " << x << ":" << y << std::endl;
+			//SDL2pp::Point cellPos = world.screenToWorld(x, y, worldScale, shiftX, shiftY);
+			//std::cout << "WORLD POS " << cellPos << std::endl;
+			// 			if (event.button.button == SDL_BUTTON_LEFT)
+			// 				world.addWallBuildTask(cellPos);
+			// 			else if (event.button.button == SDL_BUTTON_RIGHT)
+			// 				world.removeWall(cellPos);
+			// 			else if (event.button.button == SDL_BUTTON_MIDDLE)
+			// 				world.setWall(cellPos);
+		}
+		break;
+		case SDL_MOUSEMOTION:
+		{
+			Vec2 pos{ event.motion.x, event.motion.y };
+			onMouseMove(pos);
+		}
 		}
 
 	}
+}
 
-	world.update();
+void App::onMouseLeftDown(const Vec2& pos)
+{
+	selectionMode = true;
+	selectionPoint = world.screenToWorld(pos.GetX(), pos.GetY(), worldScale, shiftX, shiftY);
+}
 
-	renderer.Clear();
-	world.draw(worldScale, shiftX, shiftY);
+void App::onMouseLeftUp(const Vec2& pos)
+{
+	selectionMode = false;
+}
+
+void App::onMouseRightDown(const Vec2& pos)
+{
+
+}
+
+void App::onMouseRightUp(const Vec2& pos)
+{
+
+}
+
+void App::onMouseMove(const Vec2& pos)
+{
+	if (selectionMode)
+	{
+		Vec2 p = world.screenToWorld(pos.GetX(), pos.GetY(), worldScale, shiftX, shiftY);
+		SDL2pp::Rect r(selectionPoint, p - selectionPoint);
+		normalizeRect(r);
+		r.SetW(r.GetW() + 1);
+		r.SetH(r.GetH() + 1);
+		world.setAreaSelection(r);
+	}
 }

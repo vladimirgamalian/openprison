@@ -31,6 +31,10 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="src\unitTests\Vec2Test.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="src\Worker.cpp" />
     <ClCompile Include="src\WorkerTaskQueue.cpp" />
     <ClCompile Include="src\World.cpp" />
@@ -62,6 +66,7 @@
     <ClInclude Include="src\Delivery.h" />
     <ClInclude Include="src\DeliveryQueue.h" />
     <ClInclude Include="src\micropather.h" />
+    <ClInclude Include="src\Misc.h" />
     <ClInclude Include="src\unitTests\catch.hpp" />
     <ClInclude Include="src\Utils.h" />
     <ClInclude Include="src\Vec2.h" />
@@ -120,7 +125,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='UnitTest|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>.\src;C:\Libraries\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Libraries\lib;C:\Libraries\lib\SDL2\VS2015\Win32\Debug;$(LibraryPath)</LibraryPath>
+    <LibraryPath>C:\Libraries;C:\Libraries\lib;C:\Libraries\lib\SDL2\VS2015\Win32\Debug;C:\Libraries\lib\SDL2pp\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -143,7 +148,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;SDL2PP_WITH_IMAGE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

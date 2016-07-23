@@ -279,3 +279,8 @@ void World::pushWorkerTask(const WorkerTask& workerTask)
 {
 	workerTaskQueue.push(workerTask);
 }
+
+void World::setAreaSelection(const SDL2pp::Rect& r)
+{
+	areaSelection.set(r);
+}
