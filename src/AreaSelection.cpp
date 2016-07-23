@@ -20,5 +20,5 @@ void AreaSelection::draw()
 
 void AreaSelection::set(const SDL2pp::Rect& r)
 {
-	area = SDL2pp::Rect({ r.GetX() * 64,  r.GetY() * 64,  r.GetW() * 64,  r.GetH() * 64});
+	area = SDL2pp::Rect(r.GetX() * 64,  r.GetY() * 64,  r.GetW() * 64,  r.GetH() * 64);
 }
