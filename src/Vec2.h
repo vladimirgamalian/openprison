@@ -73,7 +73,11 @@ public:
         return (x == 0) && (y == 0);
     }
 
-	double distance(const Vec2& other) const;
+	double distance(const Vec2& other) const
+	{
+		Vec2 d = *this - other;
+		return std::sqrt(d.x * d.x + d.y * d.y);
+	}
 
 	void reset()
 	{

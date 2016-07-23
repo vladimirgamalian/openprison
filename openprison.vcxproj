@@ -30,7 +30,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="src\Vec2.cpp" />
     <ClCompile Include="src\Worker.cpp" />
     <ClCompile Include="src\WorkerTaskQueue.cpp" />
     <ClCompile Include="src\World.cpp" />

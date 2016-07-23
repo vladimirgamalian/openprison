@@ -11,7 +11,6 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 set(SOURCE_FILES
 	./src/micropather.cpp
-	./src/Vec2.cpp
 	./src/Worker.cpp
 	./src/World.cpp
 	./src/WorkerTaskQueue.cpp
