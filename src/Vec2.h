@@ -1,5 +1,6 @@
 #pragma once
 #include <SDL2pp/Point.hh>
+#include <cmath>
 
 typedef SDL2pp::Point Vec2;
 
