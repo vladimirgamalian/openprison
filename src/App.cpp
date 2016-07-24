@@ -23,7 +23,7 @@ void App::execute()
 void App::init()
 {
 	exitFlag = false;
-	worldScale = 0.5f;
+	worldScale.set(0.5f);
 	shiftX = 0;
 	shiftY = 0;
 	selectionMode = false;
@@ -34,32 +34,31 @@ void App::mainLoop()
 	while (!exitFlag)
 	{
 		update();
-		renderer.Present();
+		draw();
+
 		SDL_Delay(1);
 	}
+}
+
+void App::draw()
+{
+	renderer.SetDrawBlendMode(SDL_BLENDMODE_NONE);
+	renderer.SetDrawColor();
+	renderer.Clear();
+
+	world.draw(worldScale.get(), shiftX, shiftY);
+	renderer.Present();
 }
 
 void App::update()
 {
 	processEvent();
-
-	const float MAX_SCALE = 6.f;
-	const float MIN_SCALE = 0.2f;
-	if (worldScale > MAX_SCALE)
-		worldScale = MAX_SCALE;
-	if (worldScale < MIN_SCALE)
-		worldScale = MIN_SCALE;
-
 	world.update();
-	renderer.Clear();
-	world.draw(worldScale, shiftX, shiftY);
 }
 
 void App::processEvent()
 {
 	const float shiftSpeed = 4.f;
-
-
 
 	SDL_Event event;
 	while (SDL_PollEvent(&event))
@@ -74,22 +73,22 @@ void App::processEvent()
 			case SDLK_ESCAPE:
 				exitFlag = true;
 			case SDLK_UP:
-				shiftY += shiftSpeed * worldScale;
+				shiftY += shiftSpeed * worldScale.get();
 				break;
 			case SDLK_DOWN:
-				shiftY -= shiftSpeed * worldScale;
+				shiftY -= shiftSpeed * worldScale.get();
 				break;
 			case SDLK_LEFT:
-				shiftX += shiftSpeed * worldScale;
+				shiftX += shiftSpeed * worldScale.get();
 				break;
 			case SDLK_RIGHT:
-				shiftX -= shiftSpeed * worldScale;
+				shiftX -= shiftSpeed * worldScale.get();
 				break;
 			case SDLK_PAGEDOWN:
-				worldScale /= 1.25f;
+				worldScale.zoomOut();
 				break;
 			case SDLK_PAGEUP:
-				worldScale *= 1.25f;
+				worldScale.zoomIn();
 				break;
 			}
 			break;
@@ -97,10 +96,10 @@ void App::processEvent()
 		{
 			int y = event.wheel.y;
 			if (y > 0)
-				worldScale *= 1.25f;
+				worldScale.zoomIn();
 			if (y < 0)
-				worldScale /= 1.25f;
-			std::cout << "scale " << worldScale << std::endl;
+				worldScale.zoomOut();
+			std::cout << "scale " << worldScale.get() << std::endl;
 		}
 		break;
 		case SDL_MOUSEBUTTONDOWN:
@@ -156,7 +155,7 @@ void App::processEvent()
 void App::onMouseLeftDown(const Vec2& pos)
 {
 	selectionMode = true;
-	selectionPoint = world.screenToWorld(pos.GetX(), pos.GetY(), worldScale, shiftX, shiftY);
+	selectionPoint = world.screenToWorld(pos.GetX(), pos.GetY(), worldScale.get(), shiftX, shiftY);
 	setSelection(selectionPoint);
 }
 
@@ -187,7 +186,7 @@ void App::onMouseRightUp(const Vec2& pos)
 void App::onMouseMove(const Vec2& pos)
 {
 	if (selectionMode)
-		setSelection(world.screenToWorld(pos.GetX(), pos.GetY(), worldScale, shiftX, shiftY));
+		setSelection(world.screenToWorld(pos.GetX(), pos.GetY(), worldScale.get(), shiftX, shiftY));
 }
 
 void App::setSelection(const Vec2& pos)

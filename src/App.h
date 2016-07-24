@@ -1,6 +1,7 @@
 #pragma once
 #include <SDL2pp/SDL2pp.hh>
 #include "World.h"
+#include "WorldScale.h"
 
 class App
 {
@@ -12,6 +13,7 @@ private:
 	void init();
 	void mainLoop();
 	void update();
+	void draw();
 	void processEvent();
 
 	void onMouseLeftDown(const Vec2& pos);
@@ -28,13 +30,12 @@ private:
 	World world;
 
 	bool exitFlag = false;
-	float worldScale;
 	float shiftX;
 	float shiftY;
 	bool selectionMode;
 	//TODO: one of two next field is reduntal
 	SDL2pp::Point selectionPoint;
 	SDL2pp::Rect selectionRect;
-
+	WorldScale worldScale;
 	
 };
