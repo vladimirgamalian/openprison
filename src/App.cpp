@@ -26,6 +26,7 @@ void App::init()
 	shiftX = 0;
 	shiftY = 0;
 	selectionMode = false;
+	dragMapMode = false;
 }
 
 void App::mainLoop()
@@ -104,41 +105,23 @@ void App::processEvent()
 		case SDL_MOUSEBUTTONDOWN:
 		{
 			Vec2 pos{ event.button.x, event.button.y };
-
 			if (event.button.button == SDL_BUTTON_LEFT)
 				onMouseLeftDown(pos);
+			else if (event.button.button == SDL_BUTTON_MIDDLE)
+				onMouseMiddleDown(pos);
 			else if (event.button.button == SDL_BUTTON_RIGHT)
 				onMouseRightDown(pos);
-
-			//std::cout << "SDL_MOUSEBUTTONDOWN " << x << ":" << y << std::endl;
-			//SDL2pp::Point cellPos = world.screenToWorld(x, y, worldScale, shiftX, shiftY);
-			//std::cout << "WORLD POS " << cellPos << std::endl;
-			// 			if (event.button.button == SDL_BUTTON_LEFT)
-			// 				world.addWallBuildTask(cellPos);
-			// 			else if (event.button.button == SDL_BUTTON_RIGHT)
-			// 				world.removeWall(cellPos);
-			// 			else if (event.button.button == SDL_BUTTON_MIDDLE)
-			// 				world.setWall(cellPos);
 		}
 		break;
 		case SDL_MOUSEBUTTONUP:
 		{
 			Vec2 pos{ event.button.x, event.button.y };
-
 			if (event.button.button == SDL_BUTTON_LEFT)
 				onMouseLeftUp(pos);
+			else if (event.button.button == SDL_BUTTON_MIDDLE)
+				onMouseMiddleUp(pos);
 			else if (event.button.button == SDL_BUTTON_RIGHT)
 				onMouseRightUp(pos);
-
-			//std::cout << "SDL_MOUSEBUTTONDOWN " << x << ":" << y << std::endl;
-			//SDL2pp::Point cellPos = world.screenToWorld(x, y, worldScale, shiftX, shiftY);
-			//std::cout << "WORLD POS " << cellPos << std::endl;
-			// 			if (event.button.button == SDL_BUTTON_LEFT)
-			// 				world.addWallBuildTask(cellPos);
-			// 			else if (event.button.button == SDL_BUTTON_RIGHT)
-			// 				world.removeWall(cellPos);
-			// 			else if (event.button.button == SDL_BUTTON_MIDDLE)
-			// 				world.setWall(cellPos);
 		}
 		break;
 		case SDL_MOUSEMOTION:
@@ -154,22 +137,35 @@ void App::processEvent()
 void App::onMouseLeftDown(const Vec2& pos)
 {
 	selectionMode = true;
-	selectionPoint = world.screenToWorld(pos.GetX(), pos.GetY(), worldScale.get(), shiftX, shiftY);
-	setSelection(selectionPoint);
+	selectionCorner = screenToWorld(pos);
+	setSelection(selectionCorner);
 }
 
 void App::onMouseLeftUp(const Vec2& pos)
 {
-	selectionMode = false;
 	world.setAreaSelection(SDL2pp::Rect());
-
-	for (int row = selectionRect.GetY(); row <= selectionRect.GetY2(); ++row)
+	if (selectionMode)
 	{
-		for (int col = selectionRect.GetX(); col <= selectionRect.GetX2(); ++col)
-		{
-			world.addWallBuildTask({ col, row });
-		}
+		selectionMode = false;
+		Vec2 secondCorner = screenToWorld(pos);
+		SDL2pp::Rect selectionRect = rectFromCorners(selectionCorner, secondCorner);
+		for (int row = selectionRect.GetY(); row <= selectionRect.GetY2(); ++row)
+			for (int col = selectionRect.GetX(); col <= selectionRect.GetX2(); ++col)
+				world.addWallBuildTask({ col, row });
 	}
+}
+
+void App::onMouseMiddleDown(const Vec2& pos)
+{
+	dragMapMode = true;
+	dragStartPos = pos;
+	dragStartShiftX = shiftX;
+	dragStartShiftY = shiftY;
+}
+
+void App::onMouseMiddleUp(const Vec2& pos)
+{
+	dragMapMode = false;
 }
 
 void App::onMouseRightDown(const Vec2& pos)
@@ -185,11 +181,30 @@ void App::onMouseRightUp(const Vec2& pos)
 void App::onMouseMove(const Vec2& pos)
 {
 	if (selectionMode)
-		setSelection(world.screenToWorld(pos.GetX(), pos.GetY(), worldScale.get(), shiftX, shiftY));
+		setSelection(screenToWorld(pos));
+	else if (dragMapMode)
+	{
+		Vec2 shift = pos - dragStartPos;
+		shiftX = dragStartShiftX + shift.GetX() / worldScale.get();
+		shiftY = dragStartShiftY + shift.GetY() / worldScale.get();
+	}
 }
 
-void App::setSelection(const Vec2& pos)
+void App::setSelection(const Vec2& secondCorner)
 {
-	selectionRect = rectFromCorners(selectionPoint, pos);
+	SDL2pp::Rect selectionRect = rectFromCorners(selectionCorner, secondCorner);
 	world.setAreaSelection(selectionRect);
+}
+
+Vec2 App::screenToWorld(const Vec2& pos)
+{
+	float resultX = static_cast<float>(pos.GetX());
+	float resultY = static_cast<float>(pos.GetY());
+	resultX /= worldScale.get();
+	resultY /= worldScale.get();
+	resultX -= shiftX;
+	resultY -= shiftY;
+	resultX /= 64;
+	resultY /= 64;
+	return SDL2pp::Point(static_cast<int>(resultX), static_cast<int>(resultY));
 }

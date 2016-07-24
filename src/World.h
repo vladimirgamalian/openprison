@@ -22,8 +22,6 @@ public:
 
 	int patherSolve(const Vec2& start, const Vec2& finish, MP_VECTOR< void* >& path, float* totalCost);
 
-	Vec2 screenToWorld(int x, int y, float scale, float shiftX, float shiftY) const;
-
 	Vec2 graphStateToVec2(void *node);
 
 	bool popWorkerTask(WorkerTask& workerTask);

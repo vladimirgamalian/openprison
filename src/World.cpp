@@ -172,19 +172,6 @@ void World::removeWall(const Vec2& pos)
 	worker1.resolvePath();
 }
 
-SDL2pp::Point World::screenToWorld(int x, int y, float scale, float shiftX, float shiftY) const
-{
-	float resultX = static_cast<float>(x);
-	float resultY = static_cast<float>(y);
-	resultX /= scale;
-	resultY /= scale;
-	resultX -= shiftX;
-	resultY -= shiftY;
-	resultX /= 64;
-	resultY /= 64;
-	return SDL2pp::Point(static_cast<int>(resultX), static_cast<int>(resultY));
-}
-
 Vec2 World::graphStateToVec2(void *node)
 {
 	uintptr_t index = reinterpret_cast<uintptr_t>(node);

@@ -18,11 +18,14 @@ private:
 
 	void onMouseLeftDown(const Vec2& pos);
 	void onMouseLeftUp(const Vec2& pos);
+	void onMouseMiddleDown(const Vec2& pos);
+	void onMouseMiddleUp(const Vec2& pos);
 	void onMouseRightDown(const Vec2& pos);
 	void onMouseRightUp(const Vec2& pos);
 	void onMouseMove(const Vec2& pos);
 
-	void setSelection(const Vec2& pos);
+	void setSelection(const Vec2& secondCorner);
+	Vec2 screenToWorld(const Vec2& pos);
 
 	SDL2pp::SDL sdl;
 	SDL2pp::Window window;
@@ -33,9 +36,11 @@ private:
 	float shiftX;
 	float shiftY;
 	bool selectionMode;
-	//TODO: one of two next field is reduntal
-	SDL2pp::Point selectionPoint;
-	SDL2pp::Rect selectionRect;
+	SDL2pp::Point selectionCorner;
+	bool dragMapMode;
+	SDL2pp::Point dragStartPos;
+	//TODO: Vec2f
+	float dragStartShiftX;
+	float dragStartShiftY;
 	WorldScale worldScale;
-	
 };
