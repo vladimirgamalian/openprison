@@ -8,6 +8,7 @@ public:
 	void update();
 	void zoomIn();
 	void zoomOut();
+	float getSmooth() const;
 	float get() const;
 	
 private:

@@ -25,7 +25,8 @@ private:
 	void onMouseMove(const Vec2& pos);
 
 	void setSelection(const Vec2& secondCorner);
-	Vec2 screenToWorld(const Vec2& pos);
+	Vec2 screenToWorld(const Vec2& pos, bool smooth = true);
+	Vec2 screenToWorldCell(const Vec2& pos);
 
 	SDL2pp::SDL sdl;
 	SDL2pp::Window window;
@@ -39,6 +40,7 @@ private:
 	SDL2pp::Point selectionCorner;
 	bool dragMapMode;
 	SDL2pp::Point dragStartPos;
+	float dragStartScale;
 	//TODO: Vec2f
 	float dragStartShiftX;
 	float dragStartShiftY;

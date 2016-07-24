@@ -37,7 +37,7 @@ WorldScale::WorldScale()
 void WorldScale::update()
 {
 	const float SMOOTH_STEP = 0.1f;
-	float targetScale = scales[scaleIndex];
+	float targetScale = get();
 
 	float delta = targetScale - smoothScale;
 	if (fabs(delta) < 0.01f)
@@ -58,7 +58,13 @@ void WorldScale::zoomOut()
 		scaleIndex--;
 }
 
+float WorldScale::getSmooth() const
+{
+	//return smoothScale;
+	return get();
+}
+
 float WorldScale::get() const
 {
-	return smoothScale;
+	return scales[scaleIndex];
 }

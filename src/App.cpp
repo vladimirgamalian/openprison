@@ -46,7 +46,7 @@ void App::draw()
 	renderer.SetDrawColor();
 	renderer.Clear();
 
-	world.draw(Vec2(static_cast<int>(shiftX), static_cast<int>(shiftY)), worldScale.get());
+	world.draw(Vec2(static_cast<int>(shiftX), static_cast<int>(shiftY)), worldScale.getSmooth());
 	renderer.Present();
 }
 
@@ -74,16 +74,16 @@ void App::processEvent()
 			case SDLK_ESCAPE:
 				exitFlag = true;
 			case SDLK_UP:
-				shiftY += shiftSpeed / worldScale.get();
+				shiftY += shiftSpeed / worldScale.getSmooth();
 				break;
 			case SDLK_DOWN:
-				shiftY -= shiftSpeed / worldScale.get();
+				shiftY -= shiftSpeed / worldScale.getSmooth();
 				break;
 			case SDLK_LEFT:
-				shiftX += shiftSpeed / worldScale.get();
+				shiftX += shiftSpeed / worldScale.getSmooth();
 				break;
 			case SDLK_RIGHT:
-				shiftX -= shiftSpeed / worldScale.get();
+				shiftX -= shiftSpeed / worldScale.getSmooth();
 				break;
 			case SDLK_PAGEDOWN:
 				worldScale.zoomOut();
@@ -97,9 +97,30 @@ void App::processEvent()
 		{
 			int y = event.wheel.y;
 			if (y > 0)
+			{
+				int mx, my;
+				SDL_GetMouseState(&mx, &my);
+				Vec2 m0 = screenToWorld({ mx, my }, false);
 				worldScale.zoomIn();
+				Vec2 m1 = screenToWorld({ mx, my }, false);
+				Vec2 d = m1 - m0;
+				shiftX += d.GetX();
+				shiftY += d.GetY();
+				std::cout << d << std::endl;
+			}
 			if (y < 0)
+			{
+				int mx, my;
+				SDL_GetMouseState(&mx, &my);
+				Vec2 m0 = screenToWorld({ mx, my }, false);
 				worldScale.zoomOut();
+				Vec2 m1 = screenToWorld({ mx, my }, false);
+				Vec2 d = m1 - m0;
+				shiftX += d.GetX();
+				shiftY += d.GetY();
+
+				std::cout << d << std::endl;
+			}
 		}
 		break;
 		case SDL_MOUSEBUTTONDOWN:
@@ -137,7 +158,7 @@ void App::processEvent()
 void App::onMouseLeftDown(const Vec2& pos)
 {
 	selectionMode = true;
-	selectionCorner = screenToWorld(pos);
+	selectionCorner = screenToWorldCell(pos);
 	setSelection(selectionCorner);
 }
 
@@ -147,7 +168,7 @@ void App::onMouseLeftUp(const Vec2& pos)
 	if (selectionMode)
 	{
 		selectionMode = false;
-		Vec2 secondCorner = screenToWorld(pos);
+		Vec2 secondCorner = screenToWorldCell(pos);
 		SDL2pp::Rect selectionRect = rectFromCorners(selectionCorner, secondCorner);
 		for (int row = selectionRect.GetY(); row <= selectionRect.GetY2(); ++row)
 			for (int col = selectionRect.GetX(); col <= selectionRect.GetX2(); ++col)
@@ -159,6 +180,7 @@ void App::onMouseMiddleDown(const Vec2& pos)
 {
 	dragMapMode = true;
 	dragStartPos = pos;
+	dragStartScale = worldScale.get();
 	dragStartShiftX = shiftX;
 	dragStartShiftY = shiftY;
 }
@@ -181,12 +203,14 @@ void App::onMouseRightUp(const Vec2& pos)
 void App::onMouseMove(const Vec2& pos)
 {
 	if (selectionMode)
-		setSelection(screenToWorld(pos));
+		setSelection(screenToWorldCell(pos));
 	else if (dragMapMode)
 	{
-		Vec2 shift = pos - dragStartPos;
-		shiftX = dragStartShiftX + shift.GetX() / worldScale.get();
-		shiftY = dragStartShiftY + shift.GetY() / worldScale.get();
+		float sx = (pos.GetX() / worldScale.get()) - (dragStartPos.GetX() / dragStartScale);
+		float sy = (pos.GetY() / worldScale.get()) - (dragStartPos.GetY() / dragStartScale);
+
+		shiftX = dragStartShiftX + sx;
+		shiftY = dragStartShiftY + sy;
 	}
 }
 
@@ -196,15 +220,26 @@ void App::setSelection(const Vec2& secondCorner)
 	world.setAreaSelection(selectionRect);
 }
 
-Vec2 App::screenToWorld(const Vec2& pos)
+Vec2 App::screenToWorld(const Vec2& pos, bool smooth)
 {
 	float resultX = static_cast<float>(pos.GetX());
 	float resultY = static_cast<float>(pos.GetY());
-	resultX /= worldScale.get();
-	resultY /= worldScale.get();
+	if (smooth)
+	{
+		resultX /= worldScale.getSmooth();
+		resultY /= worldScale.getSmooth();
+	}
+	else
+	{
+		resultX /= worldScale.get();
+		resultY /= worldScale.get();
+	}
 	resultX -= shiftX;
 	resultY -= shiftY;
-	resultX /= 64;
-	resultY /= 64;
 	return SDL2pp::Point(static_cast<int>(resultX), static_cast<int>(resultY));
+}
+
+Vec2 App::screenToWorldCell(const Vec2& pos)
+{
+	return screenToWorld(pos) / 64;
 }
