@@ -23,7 +23,6 @@ void App::execute()
 void App::init()
 {
 	exitFlag = false;
-	worldScale.set(0.5f);
 	shiftX = 0;
 	shiftY = 0;
 	selectionMode = false;

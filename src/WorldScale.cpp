@@ -1,41 +1,50 @@
 #include "WorldScale.h"
-
-const float WorldScale::ZOOM_STEP = 1.25f;
-const float WorldScale::SCALE_MIN = 0.2f;
-const float WorldScale::SCALE_MAX = 6.0f;
+#include <deque>
+#include <iterator>
 
 WorldScale::WorldScale()
 {
-	set(1.f);
-}
+	const float ZOOM_STEP = 1.25f;
+	const float SCALE_BASE = 0.5f;
+	const float SCALE_MIN = 0.2f;
+	const float SCALE_MAX = 6.0f;
 
-void WorldScale::set(float scale)
-{
-	this->scale = scale;
-	clampScale();
+	std::deque<float> d;
+
+	float scale = SCALE_BASE;
+	for (;;)
+	{
+		scale /= ZOOM_STEP;
+		if (scale < SCALE_MIN)
+			break;
+		d.push_front(scale);
+	}
+
+	scaleIndex = d.size();
+
+	scale = SCALE_BASE;
+	while (scale < SCALE_MAX)
+	{
+		d.push_back(scale);
+		scale *= ZOOM_STEP;
+	}
+
+	std::copy(d.cbegin(), d.cend(), std::back_inserter(scales));
 }
 
 void WorldScale::zoomIn()
 {
-	scale *= ZOOM_STEP;
-	clampScale();
+	if ((scaleIndex + 1) < scales.size())
+		scaleIndex++;
 }
 
 void WorldScale::zoomOut()
 {
-	scale /= ZOOM_STEP;
-	clampScale();
+	if (scaleIndex > 0)
+		scaleIndex--;
 }
 
 float WorldScale::get() const
 {
-	return scale;
-}
-
-void WorldScale::clampScale()
-{
-	if (scale < SCALE_MIN)
-		scale = SCALE_MIN;
-	if (scale > SCALE_MAX)
-		scale = SCALE_MAX;
+	return scales[scaleIndex];
 }
