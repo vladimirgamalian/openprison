@@ -16,3 +16,12 @@ inline void normalizeRect(SDL2pp::Rect& r)
 		r.SetH(-h);
 	}
 }
+
+inline SDL2pp::Rect rectFromCorners(const SDL2pp::Point& p0, const SDL2pp::Point& p1)
+{
+	SDL2pp::Rect rect(p0, p1 - p0);
+	normalizeRect(rect);
+	rect.SetW(rect.GetW() + 1);
+	rect.SetH(rect.GetH() + 1);
+	return rect;
+}

@@ -65,10 +65,10 @@ private:
 	Box box;
 	AreaSelection areaSelection;
 	micropather::MicroPather microPather;
-	SDL2pp::Texture dirt;
 	SDL2pp::Texture border;
 	SDL2pp::Texture tux;
 	std::unique_ptr<SDL2pp::Texture> walls[16];
+	std::unique_ptr<SDL2pp::Texture> dirts[16];
 	
 	WorkerTaskQueue workerTaskQueue;
 

@@ -44,11 +44,8 @@ void Worker::draw()
 
 	if (workerState == WorkerState::BuildWall)
 	{
-		//Renderer& Copy(Texture& texture, const Optional<Rect>& srcrect, 
-		// const SDL2pp::Point& dstpoint, double angle,
-		// const Optional<Point>& center = NullOpt, int flip = 0);
-		double angel = buildWallAnimSeq.getValue(static_cast<float>(buildWallPhase % 120) / 60);
-		renderer.Copy(hammer, SDL2pp::NullOpt, pos + Vec2(0, -16), angel, SDL2pp::Point(16, 48), (variant == 1) ? 1 : 0);
+		double angle = buildWallAnimSeq.getValue(static_cast<float>(buildWallPhase % 120) / 60);
+		renderer.Copy(hammer, SDL2pp::NullOpt, pos + Vec2(0, -16), angle, SDL2pp::Point(16, 48), (variant == 1) ? 1 : 0);
 	}
 }
 

@@ -1,6 +1,8 @@
 #pragma once
 #include "WorldObject.h"
 #include <SDL2pp/SDL2pp.hh>
+#include "choreograph/Choreograph.h"
+#include "AnimLoop.h"
 
 class AreaSelection : public WorldObject
 {
@@ -13,4 +15,6 @@ public:
 private:
 	SDL2pp::Renderer& renderer;
 	SDL2pp::Rect area;
+	choreograph::Sequence<float> animSeq;
+	AnimLoop animLoop;
 };

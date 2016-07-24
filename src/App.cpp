@@ -6,7 +6,7 @@ App::App() :
 	sdl(SDL_INIT_VIDEO),
 	window("Open Prison",
 		SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-		640, 480,
+		1280, 960,
 		SDL_WINDOW_RESIZABLE),
 	renderer(window, -1, SDL_RENDERER_ACCELERATED),
 	world(renderer)
@@ -42,6 +42,14 @@ void App::mainLoop()
 void App::update()
 {
 	processEvent();
+
+	const float MAX_SCALE = 6.f;
+	const float MIN_SCALE = 0.2f;
+	if (worldScale > MAX_SCALE)
+		worldScale = MAX_SCALE;
+	if (worldScale < MIN_SCALE)
+		worldScale = MIN_SCALE;
+
 	world.update();
 	renderer.Clear();
 	world.draw(worldScale, shiftX, shiftY);
@@ -50,6 +58,9 @@ void App::update()
 void App::processEvent()
 {
 	const float shiftSpeed = 4.f;
+
+
+
 	SDL_Event event;
 	while (SDL_PollEvent(&event))
 	{
@@ -75,10 +86,10 @@ void App::processEvent()
 				shiftX -= shiftSpeed * worldScale;
 				break;
 			case SDLK_PAGEDOWN:
-				worldScale += 0.1f;
+				worldScale /= 1.25f;
 				break;
 			case SDLK_PAGEUP:
-				worldScale -= 0.1f;
+				worldScale *= 1.25f;
 				break;
 			}
 			break;
@@ -86,9 +97,9 @@ void App::processEvent()
 		{
 			int y = event.wheel.y;
 			if (y > 0)
-				worldScale += 0.1f;
+				worldScale *= 1.25f;
 			if (y < 0)
-				worldScale -= 0.1f;
+				worldScale /= 1.25f;
 			std::cout << "scale " << worldScale << std::endl;
 		}
 		break;
@@ -181,10 +192,6 @@ void App::onMouseMove(const Vec2& pos)
 
 void App::setSelection(const Vec2& pos)
 {
-	SDL2pp::Rect r(selectionPoint, pos - selectionPoint);
-	normalizeRect(r);
-	r.SetW(r.GetW() + 1);
-	r.SetH(r.GetH() + 1);
-	world.setAreaSelection(r);
-	selectionRect = r;
+	selectionRect = rectFromCorners(selectionPoint, pos);
+	world.setAreaSelection(selectionRect);
 }

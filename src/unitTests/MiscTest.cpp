@@ -2,7 +2,7 @@
 #include <SDL2pp/SDL2pp.hh>
 #include "../Misc.h"
 
-TEST_CASE("Test") 
+TEST_CASE("normalizeRect") 
 {
 	{
 		SDL2pp::Rect r{ 0, 0, 4, 2 };
@@ -26,4 +26,9 @@ TEST_CASE("Test")
 		REQUIRE(r.GetTopLeft() == SDL2pp::Point(6, 8));
 	}
 
+}
+
+TEST_CASE("rectFromCorners")
+{
+	//TODO: test
 }

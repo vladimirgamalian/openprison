@@ -35,4 +35,6 @@ private:
 	//TODO: one of two next field is reduntal
 	SDL2pp::Point selectionPoint;
 	SDL2pp::Rect selectionRect;
+
+	
 };

@@ -8,7 +8,6 @@ World::World(SDL2pp::Renderer& renderer) :
 	box(renderer),
 	areaSelection(renderer),
 	microPather(this),
-	dirt(renderer, "data/tileset/ground/dirt.png"),
 	border(renderer, "data/tileset/border.png"),
 	tux(renderer, "data/tux.png")
 {
@@ -18,8 +17,19 @@ World::World(SDL2pp::Renderer& renderer) :
 		walls[i] = std::unique_ptr<SDL2pp::Texture>(new SDL2pp::Texture(renderer, fileName));
 	}
 
+	for (int i = 0; i < 10; ++i)
+	{
+		std::string fileName = "data/tileset/ground/dirt/" + intTextureName(i) + ".png";
+		dirts[i] = std::unique_ptr<SDL2pp::Texture>(new SDL2pp::Texture(renderer, fileName));
+	}
+
 	memset(cells, static_cast<int>(Tiles::Space), ROW_COUNT * COL_COUNT);
 	memset(cellsAttr, 0, ROW_COUNT * COL_COUNT);
+
+	for (size_t row = 0; row < ROW_COUNT; row++)
+		for (size_t col = 0; col < ROW_COUNT; col++)
+			cellsAttr[row][col] = rand();
+
 	cells[2][2] = static_cast<int>(Tiles::Wall);
 
 	for (size_t col = 0; col < COL_COUNT; ++col)
@@ -79,7 +89,10 @@ void World::draw(float scale, float shiftX, float shiftY)
 				renderer.Copy(border, SDL2pp::NullOpt, SDL2pp::Rect(x, y, w, h));
 				break;
 			case Tiles::Space:
-				renderer.Copy(dirt, SDL2pp::NullOpt, SDL2pp::Rect(x, y, w, h));
+				{
+					SDL2pp::Texture* texture = dirts[attr % 10].get();
+					renderer.Copy(*texture, SDL2pp::NullOpt, SDL2pp::Rect(x, y, w, h));
+				}
 				break;
 			}
 
@@ -101,6 +114,7 @@ void World::update()
 {
 	worker0.update();
 	worker1.update();
+	areaSelection.update();
 }
 
 void World::setWall(const Vec2& pos)
