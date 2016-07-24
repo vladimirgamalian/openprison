@@ -1,7 +1,7 @@
 #pragma once
 #include <SDL2pp/SDL2pp.hh>
 #include "World.h"
-#include "WorldScale.h"
+#include "WorldView.h"
 
 class App
 {
@@ -25,7 +25,7 @@ private:
 	void onMouseMove(const Vec2& pos);
 
 	void setSelection(const Vec2& secondCorner);
-	Vec2 screenToWorld(const Vec2& pos, bool smooth = true);
+	Vec2 screenToWorld(const Vec2& pos);
 	Vec2 screenToWorldCell(const Vec2& pos);
 
 	SDL2pp::SDL sdl;
@@ -44,5 +44,5 @@ private:
 	//TODO: Vec2f
 	float dragStartShiftX;
 	float dragStartShiftY;
-	WorldScale worldScale;
+	WorldView worldScale;
 };

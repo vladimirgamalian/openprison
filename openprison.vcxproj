@@ -38,7 +38,7 @@
     <ClCompile Include="src\Worker.cpp" />
     <ClCompile Include="src\WorkerTaskQueue.cpp" />
     <ClCompile Include="src\World.cpp" />
-    <ClCompile Include="src\WorldScale.cpp" />
+    <ClCompile Include="src\WorldView.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\AnimLoop.h" />
@@ -77,7 +77,7 @@
     <ClInclude Include="src\WorkerTaskQueue.h" />
     <ClInclude Include="src\World.h" />
     <ClInclude Include="src\WorldObject.h" />
-    <ClInclude Include="src\WorldScale.h" />
+    <ClInclude Include="src\WorldView.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{D1356335-EF81-4A45-BEB1-58983CF72F39}</ProjectGuid>

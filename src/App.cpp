@@ -46,7 +46,7 @@ void App::draw()
 	renderer.SetDrawColor();
 	renderer.Clear();
 
-	world.draw(Vec2(static_cast<int>(shiftX), static_cast<int>(shiftY)), worldScale.getSmooth());
+	world.draw(Vec2(static_cast<int>(shiftX), static_cast<int>(shiftY)), worldScale.get());
 	renderer.Present();
 }
 
@@ -74,16 +74,16 @@ void App::processEvent()
 			case SDLK_ESCAPE:
 				exitFlag = true;
 			case SDLK_UP:
-				shiftY += shiftSpeed / worldScale.getSmooth();
+				shiftY += shiftSpeed / worldScale.get();
 				break;
 			case SDLK_DOWN:
-				shiftY -= shiftSpeed / worldScale.getSmooth();
+				shiftY -= shiftSpeed / worldScale.get();
 				break;
 			case SDLK_LEFT:
-				shiftX += shiftSpeed / worldScale.getSmooth();
+				shiftX += shiftSpeed / worldScale.get();
 				break;
 			case SDLK_RIGHT:
-				shiftX -= shiftSpeed / worldScale.getSmooth();
+				shiftX -= shiftSpeed / worldScale.get();
 				break;
 			case SDLK_PAGEDOWN:
 				worldScale.zoomOut();
@@ -100,9 +100,9 @@ void App::processEvent()
 			{
 				int mx, my;
 				SDL_GetMouseState(&mx, &my);
-				Vec2 m0 = screenToWorld({ mx, my }, false);
+				Vec2 m0 = screenToWorld({ mx, my });
 				worldScale.zoomIn();
-				Vec2 m1 = screenToWorld({ mx, my }, false);
+				Vec2 m1 = screenToWorld({ mx, my });
 				Vec2 d = m1 - m0;
 				shiftX += d.GetX();
 				shiftY += d.GetY();
@@ -112,9 +112,9 @@ void App::processEvent()
 			{
 				int mx, my;
 				SDL_GetMouseState(&mx, &my);
-				Vec2 m0 = screenToWorld({ mx, my }, false);
+				Vec2 m0 = screenToWorld({ mx, my });
 				worldScale.zoomOut();
-				Vec2 m1 = screenToWorld({ mx, my }, false);
+				Vec2 m1 = screenToWorld({ mx, my });
 				Vec2 d = m1 - m0;
 				shiftX += d.GetX();
 				shiftY += d.GetY();
@@ -220,20 +220,12 @@ void App::setSelection(const Vec2& secondCorner)
 	world.setAreaSelection(selectionRect);
 }
 
-Vec2 App::screenToWorld(const Vec2& pos, bool smooth)
+Vec2 App::screenToWorld(const Vec2& pos)
 {
 	float resultX = static_cast<float>(pos.GetX());
 	float resultY = static_cast<float>(pos.GetY());
-	if (smooth)
-	{
-		resultX /= worldScale.getSmooth();
-		resultY /= worldScale.getSmooth();
-	}
-	else
-	{
-		resultX /= worldScale.get();
-		resultY /= worldScale.get();
-	}
+	resultX /= worldScale.get();
+	resultY /= worldScale.get();
 	resultX -= shiftX;
 	resultY -= shiftY;
 	return SDL2pp::Point(static_cast<int>(resultX), static_cast<int>(resultY));

@@ -1,8 +1,8 @@
-#include "WorldScale.h"
+#include "WorldView.h"
 #include <deque>
 #include <iterator>
 
-WorldScale::WorldScale()
+WorldView::WorldView()
 {
 	const float ZOOM_STEP = 1.25f;
 	const float SCALE_BASE = 0.5f;
@@ -34,7 +34,7 @@ WorldScale::WorldScale()
 	smoothScale = SCALE_BASE;
 }
 
-void WorldScale::update()
+void WorldView::update()
 {
 	const float SMOOTH_STEP = 0.1f;
 	float targetScale = get();
@@ -46,25 +46,19 @@ void WorldScale::update()
 		smoothScale += (delta * 0.2f);
 }
 
-void WorldScale::zoomIn()
+void WorldView::zoomIn()
 {
 	if ((scaleIndex + 1) < scales.size())
 		scaleIndex++;
 }
 
-void WorldScale::zoomOut()
+void WorldView::zoomOut()
 {
 	if (scaleIndex > 0)
 		scaleIndex--;
 }
 
-float WorldScale::getSmooth() const
-{
-	//return smoothScale;
-	return get();
-}
-
-float WorldScale::get() const
+float WorldView::get() const
 {
 	return scales[scaleIndex];
 }

@@ -1,14 +1,13 @@
 #pragma once
 #include <vector>
 
-class WorldScale
+class WorldView
 {
 public:
-	WorldScale();
+	WorldView();
 	void update();
 	void zoomIn();
 	void zoomOut();
-	float getSmooth() const;
 	float get() const;
 	
 private:
