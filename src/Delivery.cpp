@@ -10,7 +10,7 @@ void Delivery::update()
 
 }
 
-void Delivery::draw()
+void Delivery::draw(const Vec2& origin)
 {
 
 }

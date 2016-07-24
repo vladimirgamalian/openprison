@@ -9,11 +9,11 @@
 class World : private micropather::Graph
 {
 public:
-	static const size_t COL_COUNT = 256;
-	static const size_t ROW_COUNT = 256;
+	static const size_t COL_COUNT = 48;
+	static const size_t ROW_COUNT = 32;
 
 	World(SDL2pp::Renderer& renderer);
-	void draw(float scale, float shiftX, float shiftY);
+	void draw(const Vec2& origin, float scale);
 	void update();
 
 	void setWall(const Vec2& pos);

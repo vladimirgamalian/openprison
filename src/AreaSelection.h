@@ -9,7 +9,7 @@ class AreaSelection : public WorldObject
 public:
 	AreaSelection(SDL2pp::Renderer& renderer);
 	virtual void update() override;
-	virtual void draw() override;
+	virtual void draw(const Vec2& origin) override;
 	void set(const SDL2pp::Rect& r);
 
 private:

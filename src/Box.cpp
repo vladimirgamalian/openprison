@@ -11,9 +11,9 @@ void Box::update()
 
 }
 
-void Box::draw()
+void Box::draw(const Vec2& origin)
 {
-	renderer.Copy(texture, SDL2pp::NullOpt, pos);
+	renderer.Copy(texture, SDL2pp::NullOpt, origin + pos);
 }
 
 void Box::setPos(const Vec2& pos)

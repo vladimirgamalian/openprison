@@ -44,7 +44,6 @@ void WorldScale::update()
 		smoothScale = targetScale;
 	else
 		smoothScale += (delta * 0.2f);
-	
 }
 
 void WorldScale::zoomIn()

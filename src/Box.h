@@ -9,7 +9,7 @@ public:
 	Box(SDL2pp::Renderer& renderer);
 
 	virtual void update() override;
-	virtual void draw() override;
+	virtual void draw(const Vec2& origin) override;
 
 	void setPos(const Vec2& pos);
 	void setPosPx(const Vec2& pos);

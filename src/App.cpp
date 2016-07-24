@@ -45,7 +45,7 @@ void App::draw()
 	renderer.SetDrawColor();
 	renderer.Clear();
 
-	world.draw(worldScale.get(), shiftX, shiftY);
+	world.draw(Vec2(static_cast<int>(shiftX), static_cast<int>(shiftY)), worldScale.get());
 	renderer.Present();
 }
 
@@ -58,7 +58,7 @@ void App::update()
 
 void App::processEvent()
 {
-	const float shiftSpeed = 4.f;
+	const float shiftSpeed = 16.f;
 
 	SDL_Event event;
 	while (SDL_PollEvent(&event))
@@ -73,16 +73,16 @@ void App::processEvent()
 			case SDLK_ESCAPE:
 				exitFlag = true;
 			case SDLK_UP:
-				shiftY += shiftSpeed * worldScale.get();
+				shiftY += shiftSpeed / worldScale.get();
 				break;
 			case SDLK_DOWN:
-				shiftY -= shiftSpeed * worldScale.get();
+				shiftY -= shiftSpeed / worldScale.get();
 				break;
 			case SDLK_LEFT:
-				shiftX += shiftSpeed * worldScale.get();
+				shiftX += shiftSpeed / worldScale.get();
 				break;
 			case SDLK_RIGHT:
-				shiftX -= shiftSpeed * worldScale.get();
+				shiftX -= shiftSpeed / worldScale.get();
 				break;
 			case SDLK_PAGEDOWN:
 				worldScale.zoomOut();
@@ -99,7 +99,6 @@ void App::processEvent()
 				worldScale.zoomIn();
 			if (y < 0)
 				worldScale.zoomOut();
-			std::cout << "scale " << worldScale.get() << std::endl;
 		}
 		break;
 		case SDL_MOUSEBUTTONDOWN:

@@ -8,7 +8,7 @@ public:
 	Delivery(DeliveryQueue& deliveryQueue);
 
 	virtual void update() override;
-	virtual void draw() override;
+	virtual void draw(const Vec2& origin) override;
 
 private:
 	DeliveryQueue& deliveryQueue;

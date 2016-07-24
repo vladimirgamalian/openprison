@@ -23,14 +23,12 @@ World::World(SDL2pp::Renderer& renderer) :
 		dirts[i] = std::unique_ptr<SDL2pp::Texture>(new SDL2pp::Texture(renderer, fileName));
 	}
 
-	memset(cells, static_cast<int>(Tiles::Space), ROW_COUNT * COL_COUNT);
+	memset(cells, static_cast<int>(Tiles::Space), ROW_COUNT * COL_COUNT * sizeof(uint32_t));
 	memset(cellsAttr, 0, ROW_COUNT * COL_COUNT);
 
 	for (size_t row = 0; row < ROW_COUNT; row++)
-		for (size_t col = 0; col < ROW_COUNT; col++)
+		for (size_t col = 0; col < COL_COUNT; col++)
 			cellsAttr[row][col] = rand();
-
-	cells[2][2] = static_cast<int>(Tiles::Wall);
 
 	for (size_t col = 0; col < COL_COUNT; ++col)
 	{
@@ -61,7 +59,7 @@ void World::addWallBuildTask(const Vec2& pos)
 	workerTaskQueue.push(WorkerTask(WorkerTask::TaskType::BuildWall, pos));
 }
 
-void World::draw(float scale, float shiftX, float shiftY)
+void World::draw(const Vec2& origin, float scale)
 {
 	renderer.SetScale(scale, scale);
 
@@ -71,8 +69,8 @@ void World::draw(float scale, float shiftX, float shiftY)
 		{
 			int w = 64;
 			int h = 64;
-			int x = static_cast<int>(shiftX) + col * w;
-			int y = static_cast<int>(shiftY) + row * h;
+			int x = static_cast<int>(origin.GetX()) + col * w;
+			int y = static_cast<int>(origin.GetY()) + row * h;
 
 			uint32_t cell = cells[row][col];
 			uint32_t attr = cellsAttr[row][col];
@@ -99,12 +97,12 @@ void World::draw(float scale, float shiftX, float shiftY)
 		}
 	}
 
-	areaSelection.draw();
+	areaSelection.draw(origin);
 
-	box.draw();
+	box.draw(origin);
 
-	worker0.draw();
-	worker1.draw();
+	worker0.draw(origin);
+	worker1.draw(origin);
 
 	renderer.SetScale(1.f, 1.f);
 	renderer.Copy(tux, SDL2pp::NullOpt, SDL2pp::Point(0, 400));
@@ -180,8 +178,8 @@ SDL2pp::Point World::screenToWorld(int x, int y, float scale, float shiftX, floa
 	float resultY = static_cast<float>(y);
 	resultX /= scale;
 	resultY /= scale;
-	resultX += shiftX;
-	resultY += shiftY;
+	resultX -= shiftX;
+	resultY -= shiftY;
 	resultX /= 64;
 	resultY /= 64;
 	return SDL2pp::Point(static_cast<int>(resultX), static_cast<int>(resultY));

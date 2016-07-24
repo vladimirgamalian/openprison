@@ -27,7 +27,7 @@ void Worker::setPos(const Vec2& pos)
 	this->pos = pos * 64;
 }
 
-void Worker::draw()
+void Worker::draw(const Vec2& origin)
 {
 	int variant = 2;
 	if (direction.y < 0)
@@ -40,12 +40,16 @@ void Worker::draw()
 		variant = 1;
 
 	SDL2pp::Texture* texture = textures[variant].get();
-	renderer.Copy(*texture, SDL2pp::NullOpt, pos);
+
+	//int x = static_cast<int>(shiftX) + col * w;
+	//int y = static_cast<int>(shiftY) + row * h;
+
+	renderer.Copy(*texture, SDL2pp::NullOpt, origin + pos);
 
 	if (workerState == WorkerState::BuildWall)
 	{
 		double angle = buildWallAnimSeq.getValue(static_cast<float>(buildWallPhase % 120) / 60);
-		renderer.Copy(hammer, SDL2pp::NullOpt, pos + Vec2(0, -16), angle, SDL2pp::Point(16, 48), (variant == 1) ? 1 : 0);
+		renderer.Copy(hammer, SDL2pp::NullOpt, origin + pos + Vec2(0, -16), angle, SDL2pp::Point(16, 48), (variant == 1) ? 1 : 0);
 	}
 }
 

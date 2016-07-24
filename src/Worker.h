@@ -13,7 +13,7 @@ class Worker : public WorldObject
 public:
 	Worker(SDL2pp::Renderer& renderer, World* world);
 	virtual void update() override;
-	virtual void draw() override;
+	virtual void draw(const Vec2& origin) override;
 	void clearPath();
 	void addPath(const Vec2& pos);
 	Vec2 getCellPos() const;

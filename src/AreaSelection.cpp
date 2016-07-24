@@ -14,13 +14,13 @@ void AreaSelection::update()
 	animLoop.step();
 }
 
-void AreaSelection::draw()
+void AreaSelection::draw(const Vec2& origin)
 {
 	Uint8 a = static_cast<Uint8>(animSeq.getValue(animLoop.get()));
 
 	renderer.SetDrawBlendMode(SDL_BLENDMODE_BLEND);
 	renderer.SetDrawColor(50, 250, 50, a);
-	renderer.FillRect(area);
+	renderer.FillRect(area + origin);
 }
 
 void AreaSelection::set(const SDL2pp::Rect& r)
