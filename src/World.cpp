@@ -69,8 +69,8 @@ void World::draw(const Vec2& origin, float scale)
 		{
 			int w = 64;
 			int h = 64;
-			int x = static_cast<int>(origin.GetX()) + col * w;
-			int y = static_cast<int>(origin.GetY()) + row * h;
+			int x = origin.GetX() + col * w;
+			int y = origin.GetY() + row * h;
 
 			uint32_t cell = cells[row][col];
 			uint32_t attr = cellsAttr[row][col];

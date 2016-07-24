@@ -41,9 +41,6 @@ void Worker::draw(const Vec2& origin)
 
 	SDL2pp::Texture* texture = textures[variant].get();
 
-	//int x = static_cast<int>(shiftX) + col * w;
-	//int y = static_cast<int>(shiftY) + row * h;
-
 	renderer.Copy(*texture, SDL2pp::NullOpt, origin + pos);
 
 	if (workerState == WorkerState::BuildWall)

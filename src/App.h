@@ -2,6 +2,7 @@
 #include <SDL2pp/SDL2pp.hh>
 #include "World.h"
 #include "WorldView.h"
+#include "Vec2f.h"
 
 class App
 {
@@ -25,7 +26,6 @@ private:
 	void onMouseMove(const Vec2& pos);
 
 	void setSelection(const Vec2& secondCorner);
-	Vec2 screenToWorld(const Vec2& pos);
 	Vec2 screenToWorldCell(const Vec2& pos);
 
 	SDL2pp::SDL sdl;
@@ -34,15 +34,10 @@ private:
 	World world;
 
 	bool exitFlag = false;
-	float shiftX;
-	float shiftY;
 	bool selectionMode;
 	SDL2pp::Point selectionCorner;
 	bool dragMapMode;
-	SDL2pp::Point dragStartPos;
-	float dragStartScale;
-	//TODO: Vec2f
-	float dragStartShiftX;
-	float dragStartShiftY;
-	WorldView worldScale;
+	Vec2f dragStartWorldPos;
+	Vec2f dragStartShift;
+	WorldView worldView;
 };
