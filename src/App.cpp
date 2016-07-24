@@ -52,6 +52,7 @@ void App::draw()
 void App::update()
 {
 	processEvent();
+	worldScale.update();
 	world.update();
 }
 

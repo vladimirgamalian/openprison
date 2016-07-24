@@ -30,6 +30,21 @@ WorldScale::WorldScale()
 	}
 
 	std::copy(d.cbegin(), d.cend(), std::back_inserter(scales));
+
+	smoothScale = SCALE_BASE;
+}
+
+void WorldScale::update()
+{
+	const float SMOOTH_STEP = 0.1f;
+	float targetScale = scales[scaleIndex];
+
+	float delta = targetScale - smoothScale;
+	if (fabs(delta) < 0.01f)
+		smoothScale = targetScale;
+	else
+		smoothScale += (delta * 0.2f);
+	
 }
 
 void WorldScale::zoomIn()
@@ -46,5 +61,5 @@ void WorldScale::zoomOut()
 
 float WorldScale::get() const
 {
-	return scales[scaleIndex];
+	return smoothScale;
 }
