@@ -44,7 +44,7 @@ void App::draw()
 	renderer.SetDrawColor();
 	renderer.Clear();
 
-	world.draw(worldView.getShift(), worldView.getScale());
+	world.draw(worldView.getShift().getVec2(), worldView.getScale());
 	renderer.Present();
 }
 
@@ -72,22 +72,16 @@ void App::processEvent()
 			case SDLK_ESCAPE:
 				exitFlag = true;
 			case SDLK_UP:
-				//shiftY += shiftSpeed / worldScale.getScale();
 				break;
 			case SDLK_DOWN:
-				//shiftY -= shiftSpeed / worldScale.getScale();
 				break;
 			case SDLK_LEFT:
-				//shiftX += shiftSpeed / worldScale.getScale();
 				break;
 			case SDLK_RIGHT:
-				//shiftX -= shiftSpeed / worldScale.getScale();
 				break;
 			case SDLK_PAGEDOWN:
-				//worldScale.zoomOut();
 				break;
 			case SDLK_PAGEUP:
-				//worldScale.zoomIn();
 				break;
 			}
 			break;
@@ -158,8 +152,7 @@ void App::onMouseLeftUp(const Vec2& pos)
 void App::onMouseMiddleDown(const Vec2& pos)
 {
 	dragMapMode = true;
-	dragStartWorldPos = Vec2f(pos) / worldView.getScale();
-	dragStartShift = worldView.getShiftF();
+	worldView.startDrag(pos);
 }
 
 void App::onMouseMiddleUp(const Vec2& pos)
@@ -182,10 +175,7 @@ void App::onMouseMove(const Vec2& pos)
 	if (selectionMode)
 		setSelection(screenToWorldCell(pos));
 	else if (dragMapMode)
-	{
-		Vec2f s = (Vec2f(pos) / worldView.getScale()) - dragStartWorldPos;
-		worldView.setShift(dragStartShift + s);
-	}
+		worldView.drag(pos);
 }
 
 void App::setSelection(const Vec2& secondCorner)

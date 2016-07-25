@@ -15,15 +15,13 @@ public:
 		y = static_cast<float>(v.GetY());
 	}
 
-	Vec2f operator / (float value) const
+	Vec2 getVec2() const
 	{
-		return Vec2f(x / value, y / value);
+		//TODO: round
+		return Vec2(static_cast<int>(x), static_cast<int>(y));
 	}
-
-	Vec2f operator * (float value) const
-	{
-		return Vec2f(x * value, y * value);
-	}
+	 
+	//////////////////////////////////////////////////////////////////////////
 
 	Vec2f operator + (const Vec2f& other) const
 	{
@@ -34,4 +32,98 @@ public:
 	{
 		return Vec2f(x - other.x, y - other.y);
 	}
+
+	Vec2f operator * (const Vec2f& other) const
+	{
+		return Vec2f(x * other.x, y * other.y);
+	}
+
+	Vec2f operator / (const Vec2f& other) const
+	{
+		return Vec2f(x / other.x, y / other.y);
+	}
+
+	//////////////////////////////////////////////////////////////////////////
+
+	Vec2f operator + (float value) const
+	{
+		return Vec2f(x + value, y + value);
+	}
+
+	Vec2f operator - (float value) const
+	{
+		return Vec2f(x - value, y - value);
+	}
+
+	Vec2f operator * (float value) const
+	{
+		return Vec2f(x * value, y * value);
+	}
+
+	Vec2f operator / (float value) const
+	{
+		return Vec2f(x / value, y / value);
+	}
+
+	//////////////////////////////////////////////////////////////////////////
+
+	Vec2f& operator += (const Vec2f& other)
+	{
+		x += other.x;
+		y += other.y;
+		return *this;
+	}
+
+	Vec2f& operator -= (const Vec2f& other)
+	{
+		x -= other.x;
+		y -= other.y;
+		return *this;
+	}
+
+	Vec2f& operator *= (const Vec2f& other)
+	{
+		x *= other.x;
+		y *= other.y;
+		return *this;
+	}
+
+	Vec2f& operator /= (const Vec2f& other)
+	{
+		x /= other.x;
+		y /= other.y;
+		return *this;
+	}
+
+	//////////////////////////////////////////////////////////////////////////
+
+	Vec2f& operator += (float value)
+	{
+		x += value;
+		y += value;
+		return *this;
+	}
+
+	Vec2f& operator -= (float value)
+	{
+		x -= value;
+		y -= value;
+		return *this;
+	}
+
+	Vec2f& operator *= (float value)
+	{
+		x *= value;
+		y *= value;
+		return *this;
+	}
+
+	Vec2f& operator /= (float value)
+	{
+		x /= value;
+		y /= value;
+		return *this;
+	}
+
+	//////////////////////////////////////////////////////////////////////////
 };

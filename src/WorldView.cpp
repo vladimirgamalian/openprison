@@ -30,22 +30,11 @@ WorldView::WorldView()
 	}
 
 	std::copy(d.cbegin(), d.cend(), std::back_inserter(scales));
-
-	smoothScale = SCALE_BASE;
-	shiftX = 0;
-	shiftY = 0;
 }
 
 void WorldView::update()
 {
-	const float SMOOTH_STEP = 0.1f;
-	float targetScale = getScale();
 
-	float delta = targetScale - smoothScale;
-	if (fabs(delta) < 0.01f)
-		smoothScale = targetScale;
-	else
-		smoothScale += (delta * 0.2f);
 }
 
 void WorldView::zoomIn(const Vec2& centerPoint)
@@ -53,11 +42,9 @@ void WorldView::zoomIn(const Vec2& centerPoint)
 	if ((scaleIndex + 1) >= scales.size())
 		return;
 
-	Vec2 v = screenToWorld(centerPoint);
+	float prevScale = getScale();
 	scaleIndex++;
-	Vec2 d = screenToWorld(centerPoint) - v;
-	shiftX += d.GetX();
-	shiftY += d.GetY();
+	shift += getShiftByScale(centerPoint, prevScale, getScale());
 }
 
 void WorldView::zoomOut(const Vec2& centerPoint)
@@ -65,11 +52,9 @@ void WorldView::zoomOut(const Vec2& centerPoint)
 	if (!scaleIndex)
 		return;
 
-	Vec2 v = screenToWorld(centerPoint);
+	float prevScale = getScale();
 	scaleIndex--;
-	Vec2 d = screenToWorld(centerPoint) - v;
-	shiftX += d.GetX();
-	shiftY += d.GetY();
+	shift += getShiftByScale(centerPoint, prevScale, getScale());
 }
 
 float WorldView::getScale() const
@@ -77,40 +62,37 @@ float WorldView::getScale() const
 	return scales[scaleIndex];
 }
 
-Vec2 WorldView::getShift() const
+Vec2f WorldView::getShift() const
 {
-	//TODO: round
-	return Vec2(static_cast<int>(shiftX), static_cast<int>(shiftY));
-}
-
-Vec2f WorldView::getShiftF() const
-{
-	return Vec2f(shiftX, shiftY);
-}
-
-float WorldView::getShiftX() const
-{
-	return shiftX;
-}
-
-float WorldView::getShiftY() const
-{
-	return shiftY;
+	return shift;
 }
 
 Vec2 WorldView::screenToWorld(const Vec2& pos) const
 {
-	float resultX = static_cast<float>(pos.GetX());
-	float resultY = static_cast<float>(pos.GetY());
-	resultX /= getScale();
-	resultY /= getScale();
-	resultX -= shiftX;
-	resultY -= shiftY;
-	return SDL2pp::Point(static_cast<int>(resultX), static_cast<int>(resultY));
+	Vec2f result = Vec2f(pos);
+	result /= getScale();
+	result -= shift;
+	return result.getVec2();
+}
+
+void WorldView::startDrag(const Vec2& screenPos)
+{
+	startDragPos = Vec2f(screenPos) / getScale();
+	startDragShift = getShift();
+}
+
+void WorldView::drag(const Vec2& screenPos)
+{
+	Vec2f s = (Vec2f(screenPos) / getScale()) - startDragPos;
+	setShift(startDragShift + s);
 }
 
 void WorldView::setShift(const Vec2f& value)
 {
-	this->shiftX = value.x;
-	this->shiftY = value.y;
+	shift = value;
+}
+
+Vec2f WorldView::getShiftByScale(const Vec2f& center, float scale0, float scale1) const
+{
+	return center * ((1.f / scale1) - (1.f / scale0));
 }

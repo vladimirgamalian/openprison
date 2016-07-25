@@ -37,7 +37,5 @@ private:
 	bool selectionMode;
 	SDL2pp::Point selectionCorner;
 	bool dragMapMode;
-	Vec2f dragStartWorldPos;
-	Vec2f dragStartShift;
 	WorldView worldView;
 };
