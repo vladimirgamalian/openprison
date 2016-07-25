@@ -5,6 +5,7 @@
 #include "WorkerTaskQueue.h"
 #include "Box.h"
 #include "AreaSelection.h"
+#include "Commuter.h"
 
 class World : private micropather::Graph
 {
@@ -69,6 +70,7 @@ private:
 	Worker worker0;
 	Worker worker1;
 	Box box;
+	Commuter commuter;
 	AreaSelection areaSelection;
 	micropather::MicroPather microPather;
 	SDL2pp::Texture border;
@@ -85,6 +87,7 @@ private:
 	
 	
 	WorkerTaskQueue workerTaskQueue;
+
 
 	uint32_t cells[ROW_COUNT][COL_COUNT];
 	uint32_t cellsAttr[ROW_COUNT][COL_COUNT];

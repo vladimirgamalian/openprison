@@ -6,6 +6,7 @@ World::World(SDL2pp::Renderer& renderer) :
 	worker0(renderer, this),
 	worker1(renderer, this),
 	box(renderer),
+	commuter(renderer),
 	areaSelection(renderer),
 	microPather(this),
 	border(renderer, "data/tileset/border.png"),
@@ -51,12 +52,12 @@ World::World(SDL2pp::Renderer& renderer) :
 			cellsAttr[row][col] = rand();
 
 	generateBorders();
-	generateRoad(COL_COUNT - 15);
+	generateRoad(4);
 
 	worker0.setPos({ 3, 2 });
 	worker1.setPos({ 3, 3 });
 
-	box.setPos({ 5, 2 });
+	box.setPos({ 15, 2 });
 
 	workerTaskQueue.push(WorkerTask(WorkerTask::TaskType::MoveBox, {7, 4}, &box));
 }
@@ -134,6 +135,8 @@ void World::draw(const Vec2& origin, float scale)
 
 	areaSelection.draw(origin);
 
+	commuter.draw(origin);
+
 	box.draw(origin);
 
 	worker0.draw(origin);
@@ -148,6 +151,7 @@ void World::update()
 	worker0.update();
 	worker1.update();
 	areaSelection.update();
+	commuter.update();
 }
 
 void World::setWall(const Vec2& pos)

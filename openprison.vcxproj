@@ -21,6 +21,7 @@
     <ClCompile Include="src\choreograph\Cue.cpp" />
     <ClCompile Include="src\choreograph\Timeline.cpp" />
     <ClCompile Include="src\choreograph\TimelineItem.cpp" />
+    <ClCompile Include="src\Commuter.cpp" />
     <ClCompile Include="src\Delivery.cpp" />
     <ClCompile Include="src\DeliveryQueue.cpp" />
     <ClCompile Include="src\main.cpp">
@@ -65,6 +66,8 @@
     <ClInclude Include="src\choreograph\TimelineItem.h" />
     <ClInclude Include="src\choreograph\TimelineOptions.hpp" />
     <ClInclude Include="src\choreograph\TimeType.h" />
+    <ClInclude Include="src\Commuter.h" />
+    <ClInclude Include="src\Defines.h" />
     <ClInclude Include="src\Delivery.h" />
     <ClInclude Include="src\DeliveryQueue.h" />
     <ClInclude Include="src\micropather.h" />
