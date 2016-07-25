@@ -234,28 +234,28 @@ void World::AdjacentCost(void* state, MP_VECTOR< micropather::StateCost > *adjac
 	Vec2 pos = graphStateToVec2(state);
 
 	bool up = false;
-	if (cells[pos.y - 1][pos.x] == Tiles::Space)		// up
+	if (!(cells[pos.y - 1][pos.x] & 0x80000000UL))		// up
 	{
 		up = true;
 		micropather::StateCost nodeCost = { vec2ToGraphState(Vec2(pos.x, pos.y - 1)), 1.f };
 		adjacent->push_back(nodeCost);
 	}
 	bool right = false;
-	if (cells[pos.y][pos.x + 1] == Tiles::Space)		// right
+	if (!(cells[pos.y][pos.x + 1] & 0x80000000UL))		// right
 	{
 		right = true;
 		micropather::StateCost nodeCost = { vec2ToGraphState(Vec2(pos.x + 1, pos.y)), 1.f };
 		adjacent->push_back(nodeCost);
 	}
 	bool down = false;
-	if (cells[pos.y + 1][pos.x] == Tiles::Space)		// down
+	if (!(cells[pos.y + 1][pos.x] & 0x80000000UL))		// down
 	{
 		down = true;
 		micropather::StateCost nodeCost = { vec2ToGraphState(Vec2(pos.x, pos.y + 1)), 1.f };
 		adjacent->push_back(nodeCost);
 	}
 	bool left = false;
-	if (cells[pos.y][pos.x - 1] == Tiles::Space)		// left
+	if (!(cells[pos.y][pos.x - 1] & 0x80000000UL))		// left
 	{
 		left = true;
 		micropather::StateCost nodeCost = { vec2ToGraphState(Vec2(pos.x - 1, pos.y)), 1.f };
@@ -264,7 +264,7 @@ void World::AdjacentCost(void* state, MP_VECTOR< micropather::StateCost > *adjac
 
 	if (up && right)
 	{
-		if (cells[pos.y - 1][pos.x + 1] == Tiles::Space)		// up-right
+		if (!(cells[pos.y - 1][pos.x + 1] & 0x80000000UL))		// up-right
 		{
 			micropather::StateCost nodeCost = { vec2ToGraphState(Vec2(pos.x + 1, pos.y - 1)), 1.41f };
 			adjacent->push_back(nodeCost);
@@ -273,7 +273,7 @@ void World::AdjacentCost(void* state, MP_VECTOR< micropather::StateCost > *adjac
 
 	if (right && down)
 	{
-		if (cells[pos.y + 1][pos.x + 1] == Tiles::Space)		// right-down
+		if (!(cells[pos.y + 1][pos.x + 1] & 0x80000000UL))		// right-down
 		{
 			micropather::StateCost nodeCost = { vec2ToGraphState(Vec2(pos.x + 1, pos.y + 1)), 1.41f };
 			adjacent->push_back(nodeCost);
@@ -282,7 +282,7 @@ void World::AdjacentCost(void* state, MP_VECTOR< micropather::StateCost > *adjac
 
 	if (down && left)
 	{
-		if (cells[pos.y + 1][pos.x - 1] == Tiles::Space)		// down-left
+		if (!(cells[pos.y + 1][pos.x - 1] & 0x80000000UL))		// down-left
 		{
 			micropather::StateCost nodeCost = { vec2ToGraphState(Vec2(pos.x - 1, pos.y + 1)), 1.41f };
 			adjacent->push_back(nodeCost);
@@ -291,7 +291,7 @@ void World::AdjacentCost(void* state, MP_VECTOR< micropather::StateCost > *adjac
 
 	if (left && up)
 	{
-		if (cells[pos.y - 1][pos.x - 1] == Tiles::Space)		// left-up
+		if (!(cells[pos.y - 1][pos.x - 1] & 0x80000000UL))		// left-up
 		{
 			micropather::StateCost nodeCost = { vec2ToGraphState(Vec2(pos.x - 1, pos.y - 1)), 1.41f };
 			adjacent->push_back(nodeCost);

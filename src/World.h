@@ -39,13 +39,14 @@ private:
 		enum
 		{
 			Space = 0,
-			Border,
-			Wall,
 			RoadLeft,
 			RoadMiddle,
 			RoadRight,
 			RoadSpace,
-			RoadSideWalk
+			RoadSideWalk,
+
+			Border = 0x80000000UL,
+			Wall
 		};
 	};
 

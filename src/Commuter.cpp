@@ -9,7 +9,7 @@ Commuter::Commuter(SDL2pp::Renderer& renderer, World* world) :
 
 void Commuter::reset()
 {
-	pos = Vec2(5 * 64 + 16, 0);
+	pos = Vec2(5 * 64 + 16, 128);
 	state = State::PreStart;
 }
 
