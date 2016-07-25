@@ -3,8 +3,6 @@
 
 World::World(SDL2pp::Renderer& renderer) : 
 	renderer(renderer),
-	worker0(renderer, this),
-	worker1(renderer, this),
 	box(renderer),
 	commuter(renderer),
 	areaSelection(renderer),
@@ -54,8 +52,9 @@ World::World(SDL2pp::Renderer& renderer) :
 	generateBorders();
 	generateRoad(4);
 
-	worker0.setPos({ 3, 2 });
-	worker1.setPos({ 3, 3 });
+
+	createWorker({ 3, 2 });
+	createWorker({ 3, 3 });
 
 	box.setPos({ 15, 2 });
 
@@ -139,8 +138,8 @@ void World::draw(const Vec2& origin, float scale)
 
 	box.draw(origin);
 
-	worker0.draw(origin);
-	worker1.draw(origin);
+	for (auto i : workers)
+		i->draw(origin);
 
 	renderer.SetScale(1.f, 1.f);
 	renderer.Copy(tux, SDL2pp::NullOpt, SDL2pp::Point(0, 400));
@@ -148,8 +147,9 @@ void World::draw(const Vec2& origin, float scale)
 
 void World::update()
 {
-	worker0.update();
-	worker1.update();
+	for (auto i : workers)
+		i->update();
+
 	areaSelection.update();
 	commuter.update();
 }
@@ -186,8 +186,10 @@ void World::setWall(const Vec2& pos)
 	cellsAttr[pos.y][pos.x] = attr;
 
 	microPather.Reset();
-	worker0.resolvePath();
-	worker1.resolvePath();
+
+	//TODO: oprimize
+	for (auto i : workers)
+		reinterpret_cast<Worker*>(i)->resolvePath();
 }
 
 void World::removeWall(const Vec2& pos)
@@ -207,8 +209,8 @@ void World::removeWall(const Vec2& pos)
 		cellsAttr[pos.y][pos.x - 1] &= ~2;
 
 	microPather.Reset();
-	worker0.resolvePath();
-	worker1.resolvePath();
+	for (auto i : workers)
+		reinterpret_cast<Worker*>(i)->resolvePath();
 }
 
 Vec2 World::graphStateToVec2(void *node)
@@ -348,4 +350,11 @@ void World::generateBorders()
 		cells[row][0] = Tiles::Border;
 		cells[row][COL_COUNT - 1] = Tiles::Border;
 	}
+}
+
+void World::createWorker(const Vec2& pos)
+{
+	Worker* worker = new Worker(renderer, this);
+	worker->setPos(pos);
+	workers.push_back(worker);
 }

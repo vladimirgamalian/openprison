@@ -66,9 +66,9 @@ private:
 	void generateBorders();
 	void generateRoad(int col);
 
+	void createWorker(const Vec2& pos);
+
 	SDL2pp::Renderer& renderer;
-	Worker worker0;
-	Worker worker1;
 	Box box;
 	Commuter commuter;
 	AreaSelection areaSelection;
@@ -88,6 +88,7 @@ private:
 	
 	WorkerTaskQueue workerTaskQueue;
 
+	std::vector<WorldObject*> workers;
 
 	uint32_t cells[ROW_COUNT][COL_COUNT];
 	uint32_t cellsAttr[ROW_COUNT][COL_COUNT];
