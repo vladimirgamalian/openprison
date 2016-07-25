@@ -24,7 +24,7 @@ Worker::Worker(SDL2pp::Renderer& renderer, World* world) :
 
 void Worker::setPos(const Vec2& pos)
 {
-	this->pos = pos * 64;
+	this->pos = pos;
 }
 
 void Worker::draw(const Vec2& origin)

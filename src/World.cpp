@@ -4,7 +4,7 @@
 World::World(SDL2pp::Renderer& renderer) : 
 	renderer(renderer),
 	box(renderer),
-	commuter(renderer),
+	commuter(renderer, this),
 	areaSelection(renderer),
 	microPather(this),
 	border(renderer, "data/tileset/border.png"),
@@ -51,10 +51,6 @@ World::World(SDL2pp::Renderer& renderer) :
 
 	generateBorders();
 	generateRoad(4);
-
-
-	createWorker({ 3, 2 });
-	createWorker({ 3, 3 });
 
 	box.setPos({ 15, 2 });
 
@@ -142,7 +138,7 @@ void World::draw(const Vec2& origin, float scale)
 		i->draw(origin);
 
 	renderer.SetScale(1.f, 1.f);
-	renderer.Copy(tux, SDL2pp::NullOpt, SDL2pp::Point(0, 400));
+	//renderer.Copy(tux, SDL2pp::NullOpt, SDL2pp::Point(0, 400));
 }
 
 void World::update()
@@ -352,9 +348,10 @@ void World::generateBorders()
 	}
 }
 
-void World::createWorker(const Vec2& pos)
+Worker* World::createWorker(const Vec2& pos)
 {
 	Worker* worker = new Worker(renderer, this);
 	worker->setPos(pos);
 	workers.push_back(worker);
+	return worker;
 }

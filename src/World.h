@@ -30,6 +30,7 @@ public:
 
 	void setAreaSelection(const SDL2pp::Rect& r);
 
+	Worker* createWorker(const Vec2& pos);
 
 private:
 
@@ -66,7 +67,6 @@ private:
 	void generateBorders();
 	void generateRoad(int col);
 
-	void createWorker(const Vec2& pos);
 
 	SDL2pp::Renderer& renderer;
 	Box box;
