@@ -9,7 +9,8 @@ World::World(SDL2pp::Renderer& renderer) :
 	areaSelection(renderer),
 	microPather(this),
 	border(renderer, "data/tileset/border.png"),
-	tux(renderer, "data/tux.png")
+	tux(renderer, "data/tux.png"),
+	roadSideWalk(renderer, "data/tileset/road/sidewalk.png")
 {
 	for (int i = 0; i < 16; ++i)
 	{
@@ -23,6 +24,25 @@ World::World(SDL2pp::Renderer& renderer) :
 		dirts[i] = std::unique_ptr<SDL2pp::Texture>(new SDL2pp::Texture(renderer, fileName));
 	}
 
+	for (int i = 0; i < 2; ++i)
+	{
+		std::string fileName = "data/tileset/road/left/" + intTextureName(i) + ".png";
+		roadLeft[i] = std::unique_ptr<SDL2pp::Texture>(new SDL2pp::Texture(renderer, fileName));
+
+		fileName = "data/tileset/road/middle/" + intTextureName(i) + ".png";
+		roadMiddle[i] = std::unique_ptr<SDL2pp::Texture>(new SDL2pp::Texture(renderer, fileName));
+
+		fileName = "data/tileset/road/right/" + intTextureName(i) + ".png";
+		roadRight[i] = std::unique_ptr<SDL2pp::Texture>(new SDL2pp::Texture(renderer, fileName));
+	}
+
+	for (int i = 0; i < 4; ++i)
+	{
+		std::string fileName = "data/tileset/road/space/" + intTextureName(i) + ".png";
+		roadSpace[i] = std::unique_ptr<SDL2pp::Texture>(new SDL2pp::Texture(renderer, fileName));
+	}
+
+
 	memset(cells, static_cast<int>(Tiles::Space), ROW_COUNT * COL_COUNT * sizeof(uint32_t));
 	memset(cellsAttr, 0, ROW_COUNT * COL_COUNT);
 
@@ -30,26 +50,13 @@ World::World(SDL2pp::Renderer& renderer) :
 		for (size_t col = 0; col < COL_COUNT; col++)
 			cellsAttr[row][col] = rand();
 
-	for (size_t col = 0; col < COL_COUNT; ++col)
-	{
-		cells[0][col] = static_cast<int>(Tiles::Border);
-		cells[ROW_COUNT - 1][col] = static_cast<int>(Tiles::Border);
-	}
-
-	for (size_t row = 0; row < ROW_COUNT; ++row)
-	{
-		cells[row][0] = static_cast<int>(Tiles::Border);
-		cells[row][COL_COUNT - 1] = static_cast<int>(Tiles::Border);
-	}
+	generateBorders();
+	generateRoad(COL_COUNT - 15);
 
 	worker0.setPos({ 3, 2 });
 	worker1.setPos({ 3, 3 });
 
 	box.setPos({ 5, 2 });
-
-	// test worker task
-	//workerTaskQueue.push(WorkerTask(WorkerTask::TaskType::BuildWall, Vec2(2, 1)));
-	//workerTaskQueue.push(WorkerTask(WorkerTask::TaskType::BuildWall, Vec2(3, 1)));
 
 	workerTaskQueue.push(WorkerTask(WorkerTask::TaskType::MoveBox, {7, 4}, &box));
 }
@@ -92,6 +99,34 @@ void World::draw(const Vec2& origin, float scale)
 					renderer.Copy(*texture, SDL2pp::NullOpt, SDL2pp::Rect(x, y, w, h));
 				}
 				break;
+			case Tiles::RoadLeft:
+			{
+				SDL2pp::Texture* texture = roadLeft[attr % 2].get();
+				renderer.Copy(*texture, SDL2pp::NullOpt, SDL2pp::Rect(x, y, w, h));
+			}
+			break;
+			case Tiles::RoadMiddle:
+			{
+				SDL2pp::Texture* texture = roadMiddle[attr % 2].get();
+				renderer.Copy(*texture, SDL2pp::NullOpt, SDL2pp::Rect(x, y, w, h));
+			}
+			break;
+			case Tiles::RoadRight:
+			{
+				SDL2pp::Texture* texture = roadRight[attr % 2].get();
+				renderer.Copy(*texture, SDL2pp::NullOpt, SDL2pp::Rect(x, y, w, h));
+			}
+			break;
+			case Tiles::RoadSpace:
+			{
+				SDL2pp::Texture* texture = roadSpace[attr % 2].get();
+				renderer.Copy(*texture, SDL2pp::NullOpt, SDL2pp::Rect(x, y, w, h));
+			}
+			break;
+			case Tiles::RoadSideWalk:
+				renderer.Copy(roadSideWalk, SDL2pp::NullOpt, SDL2pp::Rect(x, y, w, h));
+				break;
+
 			}
 
 		}
@@ -280,4 +315,33 @@ void World::pushWorkerTask(const WorkerTask& workerTask)
 void World::setAreaSelection(const SDL2pp::Rect& r)
 {
 	areaSelection.set(r);
+}
+
+void World::generateRoad(int col)
+{
+	for (int row = 1; row < ROW_COUNT - 1; ++row)
+	{
+		cells[row][col + 0] = Tiles::RoadSideWalk;
+		cells[row][col + 1] = Tiles::RoadLeft;
+		cells[row][col + 2] = Tiles::RoadSpace;
+		cells[row][col + 3] = (row % 2) ? Tiles::RoadMiddle : Tiles::RoadSpace;
+		cells[row][col + 4] = Tiles::RoadSpace;
+		cells[row][col + 5] = Tiles::RoadRight;
+		cells[row][col + 6] = Tiles::RoadSideWalk;
+	}
+}
+
+void World::generateBorders()
+{
+	for (size_t col = 0; col < COL_COUNT; ++col)
+	{
+		cells[0][col] = Tiles::Border;
+		cells[ROW_COUNT - 1][col] = Tiles::Border;
+	}
+
+	for (size_t row = 0; row < ROW_COUNT; ++row)
+	{
+		cells[row][0] = Tiles::Border;
+		cells[row][COL_COUNT - 1] = Tiles::Border;
+	}
 }

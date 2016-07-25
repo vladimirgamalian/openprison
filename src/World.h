@@ -9,8 +9,8 @@
 class World : private micropather::Graph
 {
 public:
-	static const size_t COL_COUNT = 48;
-	static const size_t ROW_COUNT = 32;
+	static const size_t COL_COUNT = 96;
+	static const size_t ROW_COUNT = 64;
 
 	World(SDL2pp::Renderer& renderer);
 	void draw(const Vec2& origin, float scale);
@@ -37,8 +37,13 @@ private:
 		enum
 		{
 			Space = 0,
-			Border = 1,
-			Wall = 2
+			Border,
+			Wall,
+			RoadLeft,
+			RoadMiddle,
+			RoadRight,
+			RoadSpace,
+			RoadSideWalk
 		};
 	};
 
@@ -57,6 +62,9 @@ private:
 	virtual void AdjacentCost(void* state, MP_VECTOR< micropather::StateCost > *adjacent);
 	virtual void  PrintStateInfo(void* state) {};
 
+	void generateBorders();
+	void generateRoad(int col);
+
 	SDL2pp::Renderer& renderer;
 	Worker worker0;
 	Worker worker1;
@@ -65,8 +73,16 @@ private:
 	micropather::MicroPather microPather;
 	SDL2pp::Texture border;
 	SDL2pp::Texture tux;
+	SDL2pp::Texture roadSideWalk;
+
 	std::unique_ptr<SDL2pp::Texture> walls[16];
 	std::unique_ptr<SDL2pp::Texture> dirts[16];
+
+	std::unique_ptr<SDL2pp::Texture> roadLeft[2];
+	std::unique_ptr<SDL2pp::Texture> roadMiddle[2];
+	std::unique_ptr<SDL2pp::Texture> roadRight[2];
+	std::unique_ptr<SDL2pp::Texture> roadSpace[4];
+	
 	
 	WorkerTaskQueue workerTaskQueue;
 
